@@ -17,6 +17,7 @@
     "debug": "~2.2.0",
     "express": "~4.13.1",
     "jade": "~1.11.0",
+    "jsonwebtoken": "^7.3.0",
     "mongodb": "^2.2.25",
     "morgan": "~1.6.1",
     "serve-favicon": "~2.3.0"
@@ -32,6 +33,7 @@
     "@types/gulp-less": "^0.0.30",
     "@types/gulp-mocha": "^0.0.30",
     "@types/gulp-nodemon": "^0.0.30",
+    "@types/jsonwebtoken": "^7.2.0",
     "@types/marked": "^0.0.28",
     "@types/mocha": "^2.2.40",
     "@types/mongodb": "^2.1.43",
