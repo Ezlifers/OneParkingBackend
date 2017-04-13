@@ -32,3 +32,5 @@ npm-debug.log
 #Files
 out/
 test/out/
+src/public/images/**/*.jpg
+src/public/images/**/*.webp
