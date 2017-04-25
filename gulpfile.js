@@ -52,11 +52,9 @@ gulp.task('build', function () {
 });
 
 // Public folder 
-gulp.task('public', function () {
-    var stream = gulp.src('./public/**/*.*')
-        .pipe(minify())
-        .pipe(gulp.dest('.out/public'));
-    return stream;
+gulp.task('public', function () {    
+    return gulp.src('./src/public/**/*')
+        .pipe(gulp.dest('./out/public'));
 });
 
 // watch for any TypeScript 
