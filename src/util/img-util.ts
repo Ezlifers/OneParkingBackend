@@ -2,7 +2,7 @@ import { IMG_USER_PATH, IMG_USER_DEFAULT, IMG_INCIDENT_PATH } from '../config/co
 export { IMG_USER_NAME_DEFAULT } from '../config/constants'
 import * as fs from 'fs'
 
-const LOCAL = 'src';
+const LOCAL = 'out';
 
 export function saveUserImage(image: string, success: (path: string) => void, undefinedImage: (defaultImg: string) => void, fail: () => void) {
     if (image == null) {
