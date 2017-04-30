@@ -62,6 +62,7 @@ export function reserve(req, res, next) {
                             },
                             usuario: {
                                 id: req.idSelf,
+                                celular: body.celular,
                                 tipo: CLIENT
                             },
                             vehiculo: body.vehiculo,
