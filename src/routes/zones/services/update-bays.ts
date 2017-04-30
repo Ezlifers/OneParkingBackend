@@ -21,7 +21,7 @@ export function updateBays(req, res, next) {
         } else if (sub < 0) {
             sub *= -1
             for (let i = 0; i < sub; i++)
-                bays.push({ dis: false, reserva: null })
+                bays.push({ index: i + bays.length, dis: false, reserva: null })
         } else {
             bays.splice(body.cantidad-1, sub)
         }

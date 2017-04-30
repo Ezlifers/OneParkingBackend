@@ -17,5 +17,6 @@ export class Reserve {
 }
 export class Bay {
     dis: boolean
+    index:number
     reserva: Reserve
 }

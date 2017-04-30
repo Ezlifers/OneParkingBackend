@@ -33,7 +33,7 @@ export function insert(req, res, next) {
 
         zone.bahias = [];
         for (let i = 0; i < zoneRequest.nBahias; i++) {
-            zone.bahias.push({ dis: false, reserva: null })
+            zone.bahias.push({  index: i, dis: false, reserva: null })
         }
 
         insertToRes(res, req.collection, zone, (id)=>{
