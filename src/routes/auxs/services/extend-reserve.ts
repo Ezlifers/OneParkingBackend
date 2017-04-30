@@ -70,8 +70,8 @@ export function extendReserve(req, res, next) {
 
                 zoneCollection.updateOne({ _id: new ObjectID(body.id) }, {
                     $set: {
-                        [`bahias.${doc.bahia}.reserva.tiempo`]: time
-                        , [`bahias.${doc.bahia}.reserva.costo`]: cost
+                        [`bahias.${body.bahia}.reserva.tiempo`]: time
+                        , [`bahias.${body.bahia}.reserva.costo`]: cost
                     }
                 });
                 res.send(new Response(true, body.bahia, `${reserve.id}`, costToken.cost, cost, current, false))
