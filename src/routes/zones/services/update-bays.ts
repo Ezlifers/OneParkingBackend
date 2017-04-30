@@ -20,10 +20,11 @@ export function updateBays(req, res, next) {
             res.send(new ResponseSimple(false))
         } else if (sub < 0) {
             sub *= -1
+            let size = bays.length;
             for (let i = 0; i < sub; i++)
-                bays.push({ index: i + bays.length, dis: false, reserva: null })
+                bays.push({ index: i + size, dis: false, reserva: null })
         } else {
-            bays.splice(body.cantidad-1, sub)
+            bays.splice(body.cantidad, sub)
         }
         updateToSimpleRes(res, req.collection, {_id:id}, {bahias: bays})
     })
