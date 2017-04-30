@@ -42,7 +42,7 @@ export function extendReserve(req, res, next) {
         let zone: Zone = doc
         let reserve = zone.bahias[body.bahia].reserva
         
-        if (reserve.id == idReserve && validateExtend(zone, body.bahia, body.tiempo, req.app)) {
+        if (reserve.id == req.params.id && validateExtend(zone, body.bahia, body.tiempo, req.app)) {
 
             calculateCost(zone, body.tiempo, current, req.app).then((costToken) => {
                 let transaction: Transaction = {
