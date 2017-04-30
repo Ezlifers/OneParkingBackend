@@ -28,7 +28,11 @@ export function getZones(req, res, next) {
     pipelines.push({ $group: { _id: "$_id", zonas: { $push: "$zonas" } } });
 
     req.collection.aggregate(pipelines).toArray().then((docs)=>{
-        res.send(docs[0].zonas)
+        if(docs.length > 0){
+            res.send(docs[0].zonas)
+        }else{
+            res.send([])
+        }        
     }, (err)=>{
         res.send([])
     })

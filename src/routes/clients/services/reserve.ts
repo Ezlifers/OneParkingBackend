@@ -38,11 +38,12 @@ export function reserve(req, res, next) {
     let zoneCollection: Collection = req.db.collection(ZONES)
 
     let body: RequestBody = req.body
+    body.fecha = new Date(body.fecha)
     let idZone = new ObjectID(body.id)
 
     getOneToFailRes(res, zoneCollection, { _id: idZone }, null, (doc) => {
 
-        validateAvailability(doc, body.fecha, req.app).then((availableToken) => {
+        validateAvailability(doc, body.fecha, body.discapacidad).then((availableToken) => {
             calculateCost(doc, body.tiempo, body.fecha, req.app).then((costToken) => {
 
                 getOneToFailRes(res, req.collection, { _id: req.idSelf }, null, (doc) => {
@@ -93,7 +94,7 @@ export function reserve(req, res, next) {
                                 suspendida: false
                             }
                             zoneCollection.updateOne({ _id: new ObjectID(doc._id) }, {
-                                $set: { [`bahias,${availableToken.bay}.reserva`]: zoneReserve }
+                                $set: { [`bahias.${availableToken.bay}.reserva`]: zoneReserve }
                             })
 
                             res.send(new Response(true, availableToken.bay, `${result.insertedId}`, reserve.costoTotal,remainingCash, body.fecha, false, false))

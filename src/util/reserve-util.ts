@@ -38,7 +38,7 @@ export function validateAvailability(zone: Zone, current: Date, disability: bool
         if (result.available)
             resolve(result)
         else
-            reject()
+            reject(Error("Bahia no disponible"))
     })
     return promise
 }
