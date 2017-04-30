@@ -83,7 +83,7 @@ export function reserve(req, res, next) {
                         fecha: body.fecha,
                         costo: reserve.costoTotal,
                         tiempo: reserve.tiempoTotal,
-                        usuario: { id: req.idSelf, tipo: AUX },
+                        usuario: { id: req.idSelf, tipo: AUX, celular: body.celular },
                         vehiculo: { placa: body.placa },
                         suspendida: false
                     }
