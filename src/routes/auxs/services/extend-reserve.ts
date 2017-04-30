@@ -75,6 +75,8 @@ export function extendReserve(req, res, next) {
                     }
                 });
                 res.send(new Response(true, body.bahia, `${reserve.id}`, costToken.cost, cost, current, false))
+            }).catch(()=>{
+                res.send(new Response(false, null, null, null, null, null, true))    
             })
         } else {
             res.send(new Response(false, null, null, null, null, null, true))
