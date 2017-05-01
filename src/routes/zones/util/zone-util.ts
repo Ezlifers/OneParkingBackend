@@ -67,10 +67,17 @@ export function setUpDefaults(zone: Zone, app: Application, defaults: boolean) {
 
 }
 
-export function makeState(zone:Zone, current:Date, showDis:boolean):State{
+export function makeState(zone:Zone, current:Date, showDis:boolean, app:Application):State{
     let bays = zone.bahias
     let currentSec = current.getTime() / 1000
     let freeTime = 0
+
+    let extra = 0
+    if(zone.configuracion.defaultTiempoExtra)
+        extra = app.get(DEFAULT_TIME_EXTRA)
+    else
+        extra = zone.configuracion.tiempoExtra
+    
 
     let state: State = { libre: null, bahias: 0, bahiasOcupadas: 0 }
     if (showDis) {
@@ -83,7 +90,7 @@ export function makeState(zone:Zone, current:Date, showDis:boolean):State{
 
         if (reserve != null && !reserve.suspendida) {
             let timeSec = reserve.fecha.getTime() / 1000
-            timeSec += reserve.tiempo
+            timeSec += reserve.tiempo + extra
             if (currentSec < timeSec) {
                 if (freeTime < timeSec)
                     freeTime = timeSec
@@ -109,9 +116,9 @@ export function makeState(zone:Zone, current:Date, showDis:boolean):State{
     return state
 }
 
-export function setUpState(zone: Zone, current: Date, showDis: boolean, showBays: boolean) {
+export function setUpState(zone: Zone, current: Date, showDis: boolean, showBays: boolean, app:Application) {
     
-    let state = makeState(zone, current, showDis)
+    let state = makeState(zone, current, showDis, app)
 
     if (!showBays) {
         delete zone.bahias
@@ -121,14 +128,14 @@ export function setUpState(zone: Zone, current: Date, showDis: boolean, showBays
 
 }
 
-export function setUpZone(app: Application, current: Date, query: QueryZone, zones: Zone[]): Promise<void> {
+export function setUpZone(app: Application, current: Date, query: QueryZone, zones: Zone[]): Promise<any> {
     let promise = new Promise((resolve) => {
         if (query.settings || query.state) {
             for (let zone of zones) {
                 if (query.settings)
                     setUpDefaults(zone, app, query.defaults)
                 if (query.state)
-                    setUpState(zone, current, query.disability, query.bays)
+                    setUpState(zone, current, query.disability, query.bays, app)
             }            
         }
         resolve()
