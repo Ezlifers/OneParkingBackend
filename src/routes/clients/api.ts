@@ -19,7 +19,7 @@ perm.add('updateCash', [SUPER, STTM])
 api.put('/:id/saldo', validateToken, validatePermission('updateCash'), updateCash)
 
 perm.add('addCar', [CLIENT])
-api.get('/vehiculos', validateToken, validatePermission('addCar'), addCar)
+api.post('/vehiculos', validateToken, validatePermission('addCar'), addCar)
 
 perm.add('deleteCar', [CLIENT])
 api.delete('/vehiculos/:placa', validateToken, validatePermission('deleteCar'), deleteCar)

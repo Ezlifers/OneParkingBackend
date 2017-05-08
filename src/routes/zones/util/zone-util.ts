@@ -21,6 +21,11 @@ export class QueryZone extends Query {
         this.disability = query.disability ? query.disability == 'true' : false
         this.lite = query.lite ? query.lite == 'true' : false
         this.projection = {}
+        
+        if(this.state){
+            this.settings = true;
+        }
+        
         if (!this.settings)
             this.projection.configuracion = 0
 
@@ -132,10 +137,10 @@ export function setUpZone(app: Application, current: Date, query: QueryZone, zon
     let promise = new Promise((resolve) => {
         if (query.settings || query.state) {
             for (let zone of zones) {
-                if (query.settings)
-                    setUpDefaults(zone, app, query.defaults)
                 if (query.state)
                     setUpState(zone, current, query.disability, query.bays, app)
+                if (query.settings)
+                    setUpDefaults(zone, app, query.defaults)                
             }            
         }
         resolve()
