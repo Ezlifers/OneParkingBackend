@@ -11,7 +11,7 @@ class Response {
         , private id: string
         , private outRange: boolean
     ) { }
-} 
+}
 
 export function insert(req, res, next) {
     let zoneRequest: RequestBody = req.body;
@@ -36,12 +36,14 @@ export function insert(req, res, next) {
 
         zone.bahias = [];
         for (let i = 0; i < zoneRequest.nBahias; i++) {
-            zone.bahias.push({  index: i, dis: false, reserva: null })
+            zone.bahias.push({ index: i, dis: false, reserva: null })
         }
 
-        insertToRes(res, req.collection, zone, (id)=>{
+        zone.localizacion.type = "Point"
+
+        insertToRes(res, req.collection, zone, (id) => {
             return new Response(true, `${id}`, false)
-        }, ()=>{
+        }, () => {
             return new Response(false, null, false)
         })
 
