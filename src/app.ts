@@ -37,6 +37,7 @@ MongoClient.connect(CONFIG.database).then((db) => {
         let user = INITIAL_USER;
         user.password = `${HmacSHA1(user.password, CONFIG.secret)}`
         db.collection("usuarios").insert(user)
+        db.collection("zonas").createIndex({localizacion:"2dsphere"})
       })
     } else {
       let conf: IConfig = r
