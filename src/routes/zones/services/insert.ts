@@ -14,16 +14,19 @@ class Response {
 } 
 
 export function insert(req, res, next) {
-    let zoneRequest: RequestBody = req.body
-    let zone = new Zone(zoneRequest)
+    let zoneRequest: RequestBody = req.body;
+    let zone = new Zone(zoneRequest);
 
-    let lat1 = CONFIG.limits.p1.lat
-    let lon1 = CONFIG.limits.p1.lon
-    let lat2 = CONFIG.limits.p2.lat
-    let lon2 = CONFIG.limits.p2.lon
+    let lat1 = CONFIG.limits.p1.lat;
+    let lon1 = CONFIG.limits.p1.lon;
+    let lat2 = CONFIG.limits.p2.lat;
+    let lon2 = CONFIG.limits.p2.lon;
+
+    let latZone = zoneRequest.localizacion.cordinates[1];
+    let lonZone = zoneRequest.localizacion.cordinates[0];
 
 
-    if (zoneRequest.lat < lat1 && zoneRequest.lat > lat2 && zoneRequest.lon < lon2 && zoneRequest.lon > lon1) {
+    if (latZone < lat1 && latZone > lat2 && lonZone < lon2 && lonZone > lon1) {
         zone.configuracion = {
             tiempoExtra: 0, defaultTiempoExtra: true
             , tiempoMax: 0, defaultTiempoMax: true
