@@ -11,6 +11,7 @@ export class QueryZone extends Query {
     state: boolean
     bays: boolean
     lite: boolean
+    tempSettings: boolean;
 
     constructor(query: any) {
         super(query)
@@ -23,6 +24,7 @@ export class QueryZone extends Query {
         this.projection = {}
         
         if(this.state){
+            this.tempSettings = !this.settings;
             this.settings = true;
         }
         
@@ -137,8 +139,14 @@ export function setUpZone(app: Application, current: Date, query: QueryZone, zon
     let promise = new Promise((resolve) => {
         if (query.settings || query.state) {
             for (let zone of zones) {
-                if (query.state)
+                if (query.state){
                     setUpState(zone, current, query.disability, query.bays, app)
+                    delete zone.bahias;
+                    if(query.tempSettings){
+                        query.settings = false;
+                        delete zone.configuracion;
+                    }
+                }
                 if (query.settings)
                     setUpDefaults(zone, app, query.defaults)                
             }            
