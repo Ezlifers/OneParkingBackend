@@ -37,8 +37,8 @@ export class QueryZone extends Query {
         if (this.lite) {
             this.projection.nombre = 0
             this.projection.direccion = 0
-            this.projection.lat = 0
-            this.projection.lon = 0
+            this.projection.localizacion = 0 
+            this.projection.codigo = 0           
         }
 
     }

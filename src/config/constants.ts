@@ -21,6 +21,8 @@ export const IMG_USER_DEFAULT = `/public/imgsrc/${IMG_USER_NAME_DEFAULT}`
 export const IMG_USER_PATH = "/public/images/usuarios/"
 export const IMG_INCIDENT_PATH = "/public/images/incidencias/"
 
+export const LOC_RADIUS = 4;
+
 
 
 

@@ -22,8 +22,8 @@ export function insert(req, res, next) {
     let lat2 = CONFIG.limits.p2.lat;
     let lon2 = CONFIG.limits.p2.lon;
 
-    let latZone = zoneRequest.localizacion.cordinates[1];
-    let lonZone = zoneRequest.localizacion.cordinates[0];
+    let latZone = zoneRequest.localizacion.coordinates[1];
+    let lonZone = zoneRequest.localizacion.coordinates[0];
 
 
     if (latZone < lat1 && latZone > lat2 && lonZone < lon2 && lonZone > lon1) {
@@ -39,7 +39,7 @@ export function insert(req, res, next) {
             zone.bahias.push({ index: i, dis: false, reserva: null })
         }
 
-        zone.localizacion.type = "Point"
+        //zone.localizacion.type = "Point"
 
         insertToRes(res, req.collection, zone, (id) => {
             return new Response(true, `${id}`, false)

@@ -2,8 +2,8 @@ import { ObjectID } from 'mongodb'
 import { Bay, Config, State } from './_index'
 
 export class Point {
-    cordinates: number[]
-    type: String
+    type: string
+    coordinates: number[]    
 }
 
 export class ZoneBase {

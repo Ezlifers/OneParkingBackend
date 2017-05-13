@@ -15,7 +15,7 @@ export function updateZone(req, res, next) {
                 "zonas.$.nombre": body.nombre
                 , "zonas.$.codigo": body.codigo
                 , "zonas.$.direccion": body.direccion
-                , "zonas.$.localizacion.cordinates": body.localizacion.cordinates                
+                , "zonas.$.localizacion.coordinates": body.localizacion.coordinates                
             }
         }).then(result => {
             updateToSimpleRes(res, req.collection, { _id: id }, body);
