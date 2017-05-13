@@ -28,7 +28,7 @@ export class QueryZone extends Query {
             this.settings = true;
         }
         
-        if (!this.settings)
+        if (!this.settings && !this.state)
             this.projection.configuracion = 0
 
         if (!this.bays && !this.state)
@@ -141,7 +141,6 @@ export function setUpZone(app: Application, current: Date, query: QueryZone, zon
             for (let zone of zones) {
                 if (query.state){
                     setUpState(zone, current, query.disability, query.bays, app)
-                    delete zone.bahias;
                     if(query.tempSettings){
                         query.settings = false;
                         delete zone.configuracion;
