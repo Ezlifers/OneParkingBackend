@@ -84,7 +84,7 @@ export function extendReserve(req, res, next) {
                         });
 
                         req.collection.updateOne({ _id: req.idSelf }, { $set: { saldo: remainingCash } })
-                        reserveExtended(body.id, body.bahia, time*1000, reserve.fecha);
+                        reserveExtended(body.id, body.bahia, time*1000, reserve.fecha,zone.bahias[body.bahia].dis);
                         res.send(new Response(true, body.bahia, `${reserve.id}`, costToken.cost, cost,remainingCash ,current, false, false))
                     }
                 })

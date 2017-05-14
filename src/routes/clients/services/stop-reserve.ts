@@ -44,7 +44,7 @@ export function stopReserve(req, res, next) {
                     remuneracion: freeToken.retribution
                 }
                 transactionCollection.insertOne(transaction)
-                reserveStoped(doc.zona.id, reserve.zona.bahia);
+                reserveStoped(doc.zona.id, reserve.zona.bahia, reserve.discapacidad);
                 res.send(new Response(true, freeToken.retribution))
 
             })

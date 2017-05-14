@@ -90,7 +90,7 @@ export function reserve(req, res, next) {
                         $set: { [`bahias.${availableToken.bay}.reserva`]: zoneReserve }
                     })
                     //TODO: verificar el tiempo extra
-                    reserveAdded(body.id, availableToken.bay, body.tiempo * 1000);
+                    reserveAdded(body.id, availableToken.bay, body.tiempo * 1000, body.discapacidad);
                     res.send(new Response(true, availableToken.bay, `${result.insertedId}`, reserve.costoTotal, body.fecha, false))
 
                 }, (err) => {

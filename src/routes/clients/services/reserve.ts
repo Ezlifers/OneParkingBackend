@@ -97,7 +97,7 @@ export function reserve(req, res, next) {
                             zoneCollection.updateOne({ _id: new ObjectID(doc._id) }, {
                                 $set: { [`bahias.${availableToken.bay}.reserva`]: zoneReserve }
                             })
-                            reserveAdded(body.id, availableToken.bay, body.tiempo * 1000);
+                            reserveAdded(body.id, availableToken.bay, body.tiempo * 1000, body.discapacidad);
                             res.send(new Response(true, availableToken.bay, `${result.insertedId}`, reserve.costoTotal,remainingCash, body.fecha, false, false))
 
                         }, (err) => {

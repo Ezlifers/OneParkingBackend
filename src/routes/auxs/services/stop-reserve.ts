@@ -25,6 +25,7 @@ export function stopReserve(req, res, next) {
 
     getOneToFailRes(res, reserveCollection, { _id: id }, null, (doc) => {
         let reserve: Reserve = doc
+        
 
         zoneCollection.updateOne({ _id: new ObjectID(doc.zona.id) }, { $set: { [`bahias.${reserve.zona.bahia}.reserva.suspendida`]: true } })
 
@@ -38,7 +39,7 @@ export function stopReserve(req, res, next) {
                 remuneracion: freeToken.retribution
             }
             transactionCollection.insertOne(transaction)
-            reserveStoped(doc.zona.id, reserve.zona.bahia);
+            reserveStoped(doc.zona.id, reserve.zona.bahia, reserve.discapacidad);
             res.send(new Response(true, freeToken.retribution))
         }, () => {
             res.send(new Response(false, null))

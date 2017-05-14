@@ -222,26 +222,26 @@ let RESERVE = 0;
 let END_RESERVE = 1;
 export let timeReserve = {};
 
-export function reserveAdded(idZone: string, bay: number, time:number){
+export function reserveAdded(idZone: string, bay: number, time:number, dis:boolean){
     ioGlobal.to("states").emit("global_state", {id: idZone, type:RESERVE});
     let timeout = setTimeout(() => { 
-        ioGlobal.to("states").emit("global_state", {id: idZone, type:END_RESERVE});
+        ioGlobal.to("states").emit("global_state", {id: idZone, type:END_RESERVE, dis:dis});
     }, time);
     timeReserve[`${idZone}_${bay}`] = timeout;
 }
 
-export function reserveStoped(idZone: string, bay: number){
+export function reserveStoped(idZone: string, bay: number, dis:boolean){
     let timeout = timeReserve[`${idZone}_${bay}`];
     clearTimeout(timeout);    
-    ioGlobal.to("states").emit("global_state", {id: idZone, type:END_RESERVE});
+    ioGlobal.to("states").emit("global_state", {id: idZone, type:END_RESERVE, dis:dis});
 }
 
-export function reserveExtended(idZone:string, bay:number, totalTime:number, date:Date){
+export function reserveExtended(idZone:string, bay:number, totalTime:number, date:Date, dis:boolean){
     let newTime = totalTime + date.getTime() - Date.now();    
     let timeout = timeReserve[`${idZone}_${bay}`];
     clearTimeout(timeout);    
     let newTimeout = setTimeout(() => { 
-        ioGlobal.to("states").emit("global_state", {id: idZone, type:END_RESERVE});
+        ioGlobal.to("states").emit("global_state", {id: idZone, type:END_RESERVE, dis:dis});
     }, newTime);
     timeReserve[`${idZone}_${bay}`] = timeout;
 }
