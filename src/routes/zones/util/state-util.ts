@@ -65,10 +65,10 @@ export function defaultTimesActive(day: number, hour: number, app: Application):
     return active;
 }
 
-export function setUpStates(app: Application, current: Date, query: QueryStates, zones: Zone[]): Promise<any> {
+export function setUpStates(current: Date, query: QueryStates, zones: Zone[]): Promise<any> {
     let promise = new Promise((resolve) => {
         for (let zone of zones) {
-            setUpState(zone, current, true, false, app);
+            setUpState(zone, current, true, false);
             delete zone.configuracion;           
         }
         resolve()

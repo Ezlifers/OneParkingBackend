@@ -9,7 +9,7 @@ export function getState(req, res, next) {
 
     getOneToFailRes(res, req.collection, { _id: id }, null, (doc) => {
         let zone: Zone = doc
-        let state = makeState(zone, new Date(), dis, req.app)
+        let state = makeState(zone, new Date(), dis)
         res.send(state)
     })
 
