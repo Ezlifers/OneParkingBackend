@@ -4,7 +4,7 @@ import { TRANSACTIONS } from '../../transactions/api'
 import { Reserve as ZoneReserve } from '../../zones/models/_index'
 import { Transaction, RESERVE } from '../../transactions/models/_index'
 import { Reserve } from '../../reserves/models/_index'
-import { getOneToFailRes, insertToRes, validateAvailability, calculateCost, reserveAdded } from '../../../util/_index'
+import { getOneToFailRes, insertToRes, validateAvailability, calculateCost, reserveAdded, zoneBayUpdated } from '../../../util/_index'
 import { AUX } from '../../../config/constants'
 import { Collection, ObjectID } from 'mongodb'
 
@@ -90,7 +90,8 @@ export function reserve(req, res, next) {
                         $set: { [`bahias.${availableToken.bay}.reserva`]: zoneReserve }
                     })
                     //TODO: verificar el tiempo extra
-                    reserveAdded(body.id, availableToken.bay, body.tiempo * 1000, body.discapacidad);
+                    reserveAdded(body.id, availableToken.bay, body.tiempo * 1000,body.fecha, body.discapacidad);
+                    zoneBayUpdated(body.id, availableToken.bay, zoneReserve);
                     res.send(new Response(true, availableToken.bay, `${result.insertedId}`, reserve.costoTotal, body.fecha, false))
 
                 }, (err) => {

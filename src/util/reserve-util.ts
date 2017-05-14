@@ -2,6 +2,7 @@ import { clearTimeout, setTimeout } from 'timers';
 import { Application } from 'express'
 import { Zone, TimeRange } from '../routes/zones/models/_index'
 import { Reserve } from '../routes/reserves/models/_index'
+import { Reserve as ZoneReserve } from '../routes/zones/models/_index'
 import { Cost } from '../routes/reserves/models/_index'
 import { DEFAULT_TIMES, DEFAULT_PRICE, DEFAULT_TIME_MIN, DEFAULT_TIME_MAX } from '../config/constants'
 import { ioGlobal, ioZones } from '../www';
@@ -222,7 +223,8 @@ let RESERVE = 0;
 let END_RESERVE = 1;
 export let timeReserve = {};
 
-export function reserveAdded(idZone: string, bay: number, time:number, dis:boolean){
+export function reserveAdded(idZone: string, bay: number, timeReq:number,date:Date, dis:boolean){
+    let time = timeReq + date.getTime() - Date.now();    
     ioGlobal.to("states").emit("global_state", {id: idZone, type:RESERVE});
     let timeout = setTimeout(() => { 
         ioGlobal.to("states").emit("global_state", {id: idZone, type:END_RESERVE, dis:dis});
@@ -244,4 +246,8 @@ export function reserveExtended(idZone:string, bay:number, totalTime:number, dat
         ioGlobal.to("states").emit("global_state", {id: idZone, type:END_RESERVE, dis:dis});
     }, newTime);
     timeReserve[`${idZone}_${bay}`] = timeout;
+}
+
+export function zoneBayUpdated(idZone:string, bay:number, reserve:ZoneReserve){
+    ioZones.to(idZone).emit("reserves", {bay:bay, reserve: reserve});
 }
