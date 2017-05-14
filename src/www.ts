@@ -1,6 +1,7 @@
 import app from './app';
 import * as debugModule from 'debug';
 import * as http from 'http';
+import * as serverIO from 'socket.io';
 
 const debug = debugModule('node-express-typescript:server');
 
@@ -26,10 +27,33 @@ server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
 
+//Setup Socket io
+let io = serverIO(server);
+
+export let ioGlobal = io.of('/socket/global');
+ioGlobal.on('connection', (socket) => {
+  socket.on('subscribe', () => {
+    socket.join("states");
+  });
+  socket.on('unsubscribe', () => {
+    socket.leave("states");
+  });
+});
+
+export let ioZones = io.of('/socket/zones');
+ioZones.on('connection', (socket) => {
+  socket.on('subscribe', (data) => {
+    socket.join(data.zone);
+  });
+  socket.on('unsubscribe', (data) => {
+    socket.leave(data.zone);
+  });
+});
+
 /**
  * Normalize a port into a number, string, or false.
  */
-function normalizePort(val: any): number|string|boolean {
+function normalizePort(val: any): number | string | boolean {
   let port = parseInt(val, 10);
 
   if (isNaN(port)) {

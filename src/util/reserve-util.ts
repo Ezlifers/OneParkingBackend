@@ -1,8 +1,10 @@
+import { clearTimeout, setTimeout } from 'timers';
 import { Application } from 'express'
 import { Zone, TimeRange } from '../routes/zones/models/_index'
 import { Reserve } from '../routes/reserves/models/_index'
 import { Cost } from '../routes/reserves/models/_index'
 import { DEFAULT_TIMES, DEFAULT_PRICE, DEFAULT_TIME_MIN, DEFAULT_TIME_MAX } from '../config/constants'
+import { ioGlobal, ioZones } from '../www';
 
 interface AvailableToken {
     available: boolean
@@ -208,10 +210,38 @@ export function calculateCost(zone: Zone, time: number, current: Date, app: Appl
             result.cost = Math.round(result.cost)
             result.cost = result.cost * 100
             resolve(result)
-        }else{
+        } else {
             reject()
         }
-        
+
     })
     return promise
+}
+
+let RESERVE = 0;
+let END_RESERVE = 1;
+export let timeReserve = {};
+
+export function reserveAdded(idZone: string, bay: number, time:number){
+    ioGlobal.to("states").emit("global_state", {id: idZone, type:RESERVE});
+    let timeout = setTimeout(() => { 
+        ioGlobal.to("states").emit("global_state", {id: idZone, type:END_RESERVE});
+    }, time);
+    timeReserve[`${idZone}_${bay}`] = timeout;
+}
+
+export function reserveStoped(idZone: string, bay: number){
+    let timeout = timeReserve[`${idZone}_${bay}`];
+    clearTimeout(timeout);    
+    ioGlobal.to("states").emit("global_state", {id: idZone, type:END_RESERVE});
+}
+
+export function reserveExtended(idZone:string, bay:number, totalTime:number, date:Date){
+    let newTime = totalTime + date.getTime() - Date.now();    
+    let timeout = timeReserve[`${idZone}_${bay}`];
+    clearTimeout(timeout);    
+    let newTimeout = setTimeout(() => { 
+        ioGlobal.to("states").emit("global_state", {id: idZone, type:END_RESERVE});
+    }, newTime);
+    timeReserve[`${idZone}_${bay}`] = timeout;
 }

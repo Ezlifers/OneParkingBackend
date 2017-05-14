@@ -4,7 +4,7 @@ import { TRANSACTIONS } from '../../transactions/api'
 import { Zone } from '../../zones/models/_index'
 import { Transaction, EXTEND_RESERVE } from '../../transactions/models/_index'
 import { Extension } from '../../reserves/models/_index'
-import { getOneToFailRes, validateExtend, calculateCost } from '../../../util/_index'
+import { getOneToFailRes, validateExtend, calculateCost, reserveExtended } from '../../../util/_index'
 import { AUX } from '../../../config/constants'
 import { Collection, ObjectID } from 'mongodb'
 
@@ -74,6 +74,7 @@ export function extendReserve(req, res, next) {
                         , [`bahias.${body.bahia}.reserva.costo`]: cost
                     }
                 });
+                reserveExtended(body.id, body.bahia, time*1000, reserve.fecha);
                 res.send(new Response(true, body.bahia, `${reserve.id}`, costToken.cost, cost, current, false))
             }).catch(()=>{
                 res.send(new Response(false, null, null, null, null, null, true))    

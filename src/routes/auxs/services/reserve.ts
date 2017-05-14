@@ -4,7 +4,7 @@ import { TRANSACTIONS } from '../../transactions/api'
 import { Reserve as ZoneReserve } from '../../zones/models/_index'
 import { Transaction, RESERVE } from '../../transactions/models/_index'
 import { Reserve } from '../../reserves/models/_index'
-import { getOneToFailRes, insertToRes, validateAvailability, calculateCost } from '../../../util/_index'
+import { getOneToFailRes, insertToRes, validateAvailability, calculateCost, reserveAdded } from '../../../util/_index'
 import { AUX } from '../../../config/constants'
 import { Collection, ObjectID } from 'mongodb'
 
@@ -39,8 +39,7 @@ export function reserve(req, res, next) {
     let body: RequestBody = req.body
     body.fecha = new Date(body.fecha)
     let idZone = new ObjectID(body.id)
-    //TODO: probar la fecha si es necesario comvertir de string a date
-
+    
     getOneToFailRes(res, zoneCollection, { _id: idZone }, null, (doc) => {
         validateAvailability(doc, body.fecha, body.discapacidad).then((availableToken) => {
             calculateCost(doc, body.tiempo, body.fecha, req.app).then((costToken) => {
@@ -90,7 +89,8 @@ export function reserve(req, res, next) {
                     zoneCollection.updateOne({ _id: new ObjectID(doc._id) }, {
                         $set: { [`bahias.${availableToken.bay}.reserva`]: zoneReserve }
                     })
-
+                    //TODO: verificar el tiempo extra
+                    reserveAdded(body.id, availableToken.bay, body.tiempo * 1000);
                     res.send(new Response(true, availableToken.bay, `${result.insertedId}`, reserve.costoTotal, body.fecha, false))
 
                 }, (err) => {
