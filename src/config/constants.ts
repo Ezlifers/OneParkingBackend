@@ -1,8 +1,7 @@
 export const DEFAULT_TIME_MAX = "tiempoMax"
 export const DEFAULT_TIME_MIN = "tiempoMin"
-export const DEFAULT_TIME_EXTRA = "tiempoExtra"
 export const DEFAULT_TIMES = "tiempos"
-//TODO: Cambiar precioMin por precio
+
 export const DEFAULT_PRICE = "precio"
 export const DEFAULT_USER_CAR = "vehiculosUsuario"
 export const PERMISSIONS = "permissions"

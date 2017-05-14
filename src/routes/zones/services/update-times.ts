@@ -21,9 +21,7 @@ export function updateTimes(req, res, next) {
         defaultTiempoMax: body.tiempoMax.default
         , tiempoMax: body.tiempoMax.default ? 0 : body.tiempoMax.value
         , defaultTiempoMin: body.tiempoMin.default
-        , tiempoMin: body.tiempoMin.default ? 0 : body.tiempoMin.value
-        , defaultTiempoExtra: body.tiempoExtra.default
-        , tiempoExtra: body.tiempoExtra.default ? 0 : body.tiempoExtra.value
+        , tiempoMin: body.tiempoMin.default ? 0 : body.tiempoMin.value        
     }
 
     let updated = {}

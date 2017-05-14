@@ -36,7 +36,6 @@ export const DEFAULT_BEHAVIOR: IConfig = {
     vehiculosUsuario: 5,
     tiempoMax: 3600,
     tiempoMin: 600,
-    tiempoExtra: 120,
     tiempos: [{ tipo: TIME_RANGE[0], horarios: [{ d: true, ti: 495, tf: 1080, dp: false, p: 1500 }] }
         , { tipo: TIME_RANGE[1], horarios: [{ d: true, ti: 480, tf: 1080, dp: true, p: 0 }] }
         , { tipo: TIME_RANGE[2], horarios: [] }

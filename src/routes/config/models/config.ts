@@ -6,7 +6,6 @@ export interface IConfig {
     vehiculosUsuario: number
     tiempoMax: number //Sec
     tiempoMin: number //Sec
-    tiempoExtra: number
     tiempos: TimeRange[]
 }
 

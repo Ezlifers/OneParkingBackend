@@ -7,7 +7,7 @@ import cookieParser = require('cookie-parser'); // this module doesn't use the E
 
 import { MongoClient, ObjectID } from 'mongodb'
 import { CONFIG, DEFAULT_BEHAVIOR, INITIAL_USER } from './config/main'
-import { DEFAULT_PRICE, DEFAULT_TIME_EXTRA, DEFAULT_TIME_MAX, DEFAULT_TIME_MIN, DEFAULT_TIMES, DEFAULT_USER_CAR, CONFIG_ID, PERMISSIONS } from './config/constants'
+import { DEFAULT_PRICE, DEFAULT_TIME_MAX, DEFAULT_TIME_MIN, DEFAULT_TIMES, DEFAULT_USER_CAR, CONFIG_ID, PERMISSIONS } from './config/constants'
 import { IConfig } from './routes/config/models/_index'
 import { ResourcePermisions } from './middlewares/validate_permission'
 import { HmacSHA1 } from 'crypto-js'
@@ -132,7 +132,6 @@ function setConfigApp(conf: IConfig, id: ObjectID) {
   app.set(DEFAULT_USER_CAR, conf.vehiculosUsuario)
   app.set(DEFAULT_TIME_MAX, conf.tiempoMax)
   app.set(DEFAULT_TIME_MIN, conf.tiempoMin)
-  app.set(DEFAULT_TIME_EXTRA, conf.tiempoExtra)
   app.set(DEFAULT_TIMES, conf.tiempos)
   app.set(CONFIG_ID, id)
 }

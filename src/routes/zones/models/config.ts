@@ -18,9 +18,6 @@ export class Config {
     tiempoMax?:number // Sec
     defaultTiempoMin?:boolean
     tiempoMin?:number // Sec
-    defaultTiempoExtra?:boolean
-    tiempoExtra?:number
-    //TODO: cambiar tiempoUSO por tiempos
     defaultTiempos?:boolean
     tiempos?:TimeRange[]
 }

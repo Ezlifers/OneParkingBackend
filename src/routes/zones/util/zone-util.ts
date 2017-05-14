@@ -1,7 +1,7 @@
 import { Application } from 'express'
 import { Zone, State } from '../models/_index'
 import { Query } from '../../../util/response-util'
-import { DEFAULT_PRICE, DEFAULT_TIME_EXTRA, DEFAULT_TIME_MAX, DEFAULT_TIME_MIN, DEFAULT_TIMES } from '../../../config/constants'
+import { DEFAULT_PRICE, DEFAULT_TIME_MAX, DEFAULT_TIME_MIN, DEFAULT_TIMES } from '../../../config/constants'
 
 export class QueryZone extends Query {
     settings: boolean
@@ -11,7 +11,6 @@ export class QueryZone extends Query {
     state: boolean
     bays: boolean
     lite: boolean
-    tempSettings: boolean;
 
     constructor(query: any) {
         super(query)
@@ -22,13 +21,8 @@ export class QueryZone extends Query {
         this.disability = query.disability ? query.disability == 'true' : false
         this.lite = query.lite ? query.lite == 'true' : false
         this.projection = {}
-        
-        if(this.state){
-            this.tempSettings = !this.settings;
-            this.settings = true;
-        }
-        
-        if (!this.settings && !this.state)
+
+        if (!this.settings)
             this.projection.configuracion = 0
 
         if (!this.bays && !this.state)
@@ -37,8 +31,8 @@ export class QueryZone extends Query {
         if (this.lite) {
             this.projection.nombre = 0
             this.projection.direccion = 0
-            this.projection.localizacion = 0 
-            this.projection.codigo = 0           
+            this.projection.localizacion = 0
+            this.projection.codigo = 0
         }
 
     }
@@ -51,8 +45,6 @@ export function setUpDefaults(zone: Zone, app: Application, defaults: boolean) {
         config.tiempoMax = app.get(DEFAULT_TIME_MAX)
     if (config.defaultTiempoMin)
         config.tiempoMin = app.get(DEFAULT_TIME_MIN)
-    if (config.defaultTiempoExtra)
-        config.tiempoExtra = app.get(DEFAULT_TIME_EXTRA)
     if (config.defaultTiempos)
         config.tiempos = app.get(DEFAULT_TIMES)
 
@@ -66,7 +58,6 @@ export function setUpDefaults(zone: Zone, app: Application, defaults: boolean) {
     }
 
     if (!defaults) {
-        delete config.defaultTiempoExtra
         delete config.defaultTiempoMax
         delete config.defaultTiempoMin
         delete config.defaultTiempos
@@ -74,17 +65,10 @@ export function setUpDefaults(zone: Zone, app: Application, defaults: boolean) {
 
 }
 
-export function makeState(zone:Zone, current:Date, showDis:boolean, app:Application):State{
+export function makeState(zone: Zone, current: Date, showDis: boolean): State {
     let bays = zone.bahias
     let currentSec = current.getTime() / 1000
     let freeTime = 0
-
-    let extra = 0
-    if(zone.configuracion.defaultTiempoExtra)
-        extra = app.get(DEFAULT_TIME_EXTRA)
-    else
-        extra = zone.configuracion.tiempoExtra
-    
 
     let state: State = { libre: null, bahias: 0, bahiasOcupadas: 0 }
     if (showDis) {
@@ -97,7 +81,7 @@ export function makeState(zone:Zone, current:Date, showDis:boolean, app:Applicat
 
         if (reserve != null && !reserve.suspendida) {
             let timeSec = reserve.fecha.getTime() / 1000
-            timeSec += reserve.tiempo + extra
+            timeSec += reserve.tiempo
             if (currentSec < timeSec) {
                 if (freeTime < timeSec)
                     freeTime = timeSec
@@ -123,9 +107,9 @@ export function makeState(zone:Zone, current:Date, showDis:boolean, app:Applicat
     return state
 }
 
-export function setUpState(zone: Zone, current: Date, showDis: boolean, showBays: boolean, app:Application) {
-    
-    let state = makeState(zone, current, showDis, app)
+export function setUpState(zone: Zone, current: Date, showDis: boolean, showBays: boolean) {
+
+    let state = makeState(zone, current, showDis)
 
     if (!showBays) {
         delete zone.bahias
@@ -139,16 +123,12 @@ export function setUpZone(app: Application, current: Date, query: QueryZone, zon
     let promise = new Promise((resolve) => {
         if (query.settings || query.state) {
             for (let zone of zones) {
-                if (query.state){
-                    setUpState(zone, current, query.disability, query.bays, app)
-                    if(query.tempSettings){
-                        query.settings = false;
-                        delete zone.configuracion;
-                    }
+                if (query.state) {
+                    setUpState(zone, current, query.disability, query.bays)
                 }
                 if (query.settings)
-                    setUpDefaults(zone, app, query.defaults)                
-            }            
+                    setUpDefaults(zone, app, query.defaults)
+            }
         }
         resolve()
     })

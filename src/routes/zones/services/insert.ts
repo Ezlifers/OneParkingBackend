@@ -28,8 +28,7 @@ export function insert(req, res, next) {
 
     if (latZone < lat1 && latZone > lat2 && lonZone < lon2 && lonZone > lon1) {
         zone.configuracion = {
-            tiempoExtra: 0, defaultTiempoExtra: true
-            , tiempoMax: 0, defaultTiempoMax: true
+            tiempoMax: 0, defaultTiempoMax: true
             , tiempoMin: 0, defaultTiempoMin: true
             , tiempos: [], defaultTiempos: true
         }
