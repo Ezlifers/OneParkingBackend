@@ -89,7 +89,6 @@ export function reserve(req, res, next) {
                     zoneCollection.updateOne({ _id: new ObjectID(doc._id) }, {
                         $set: { [`bahias.${availableToken.bay}.reserva`]: zoneReserve }
                     })
-                    //TODO: verificar el tiempo extra
                     reserveAdded(body.id, availableToken.bay, body.tiempo * 1000,body.fecha, body.discapacidad);
                     zoneBayUpdated(body.id, availableToken.bay, zoneReserve);
                     res.send(new Response(true, availableToken.bay, `${result.insertedId}`, reserve.costoTotal, body.fecha, false))

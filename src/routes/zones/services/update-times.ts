@@ -10,8 +10,7 @@ interface IRequesTime {
 
 interface RequestBody {
     tiempoMax: IRequesTime
-    tiempoMin: IRequesTime
-    tiempoExtra: IRequesTime
+    tiempoMin: IRequesTime    
 }
 
 export function updateTimes(req, res, next) {
