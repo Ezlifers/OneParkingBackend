@@ -5,7 +5,7 @@ import { Car } from '../../users/models/_index'
 import { Reserve as ZoneReserve } from '../../zones/models/_index'
 import { Transaction, RESERVE } from '../../transactions/models/_index'
 import { Reserve } from '../../reserves/models/_index'
-import { getOneToFailRes, insertToRes, validateAvailability, calculateCost } from '../../../util/_index'
+import { getOneToFailRes, insertToRes, validateAvailability, calculateCost, reserveAdded } from '../../../util/_index'
 import { CLIENT } from '../../../config/constants'
 import { Collection, ObjectID } from 'mongodb'
 
@@ -97,7 +97,7 @@ export function reserve(req, res, next) {
                             zoneCollection.updateOne({ _id: new ObjectID(doc._id) }, {
                                 $set: { [`bahias.${availableToken.bay}.reserva`]: zoneReserve }
                             })
-
+                            reserveAdded(body.id, availableToken.bay, body.tiempo * 1000);
                             res.send(new Response(true, availableToken.bay, `${result.insertedId}`, reserve.costoTotal,remainingCash, body.fecha, false, false))
 
                         }, (err) => {

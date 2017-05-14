@@ -3,7 +3,7 @@ import { RESERVES } from '../../reserves/api'
 import { TRANSACTIONS } from '../../transactions/api'
 import { Reserve } from '../../reserves/models/_index'
 import { Transaction, STOP_RERSERVE } from '../../transactions/models/_index'
-import { getOneToFailRes, calculateFreeTime } from '../../../util/_index'
+import { getOneToFailRes, calculateFreeTime, reserveStoped } from '../../../util/_index'
 import { CLIENT } from '../../../config/constants'
 import { Collection, ObjectID } from 'mongodb'
 
@@ -44,6 +44,7 @@ export function stopReserve(req, res, next) {
                     remuneracion: freeToken.retribution
                 }
                 transactionCollection.insertOne(transaction)
+                reserveStoped(doc.zona.id, reserve.zona.bahia);
                 res.send(new Response(true, freeToken.retribution))
 
             })
