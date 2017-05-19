@@ -28,7 +28,7 @@ export function register(req, res, next) {
     usr.saldo = 0
     usr.vehiculos = []
 
-    req.collection.findOne({ usuario: usr.usuario }).then((doc) => {
+    req.collection.findOne({ $or: [{ usuario: usr.usuario }, { celular: usr.celular }] }).then((doc) => {
 
         if (doc == null) {
             insertToRes(res, req.collection, usr, (id) => {
