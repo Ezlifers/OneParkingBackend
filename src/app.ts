@@ -7,7 +7,7 @@ import cookieParser = require('cookie-parser'); // this module doesn't use the E
 
 import { MongoClient, ObjectID } from 'mongodb'
 import { CONFIG, DEFAULT_BEHAVIOR, INITIAL_USER } from './config/main'
-import { DEFAULT_PRICE, DEFAULT_TIME_MAX, DEFAULT_TIME_MIN, DEFAULT_TIMES, DEFAULT_USER_CAR, CONFIG_ID, PERMISSIONS } from './config/constants'
+import { DEFAULT_PRICE, DEFAULT_TIME_MAX, DEFAULT_TIME_MIN, DEFAULT_TIMES, DEFAULT_USER_CAR, CONFIG_ID, PERMISSIONS, ZONE_VERSION } from './config/constants'
 import { IConfig } from './routes/config/models/_index'
 import { ResourcePermisions } from './middlewares/validate_permission'
 import { HmacSHA1 } from 'crypto-js'
@@ -65,6 +65,16 @@ MongoClient.connect(CONFIG.database).then((db) => {
       db.collection("permisos").insertOne({ version: CONFIG.permissionVersion, permissions: permissions })
     }
   })
+
+  //ZONE VERSION
+  db.collection("zonas").findOne({$query:{},$orderby:{version:-1}}).then(zone=>{
+    if(zone == null){
+      app.set(ZONE_VERSION, 0)  
+    }else{
+      app.set(ZONE_VERSION, zone.version)
+    }    
+  })
+  
 
 }, (err) => {
   console.log("ERROR al conectarse en mongo : " + err)

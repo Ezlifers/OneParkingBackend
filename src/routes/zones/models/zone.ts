@@ -12,6 +12,7 @@ export class ZoneBase {
     codigo: number
     nombre: string
     direccion: string
+    version?: number
 }
 
 export class Zone extends ZoneBase {
@@ -19,7 +20,7 @@ export class Zone extends ZoneBase {
     bahias: Bay[]
     configuracion: Config
     estado?: State
-
+    
     constructor(base?: ZoneBase) {
         super()
         if (base) {

@@ -1,6 +1,7 @@
 import { CONFIG } from '../../../config/main'
 import { insertToRes } from '../../../util/response-util'
 import { Zone, ZoneBase } from '../models/_index'
+import { ZONE_VERSION } from '../../../config/constants';
 
 class RequestBody extends ZoneBase {
     nBahias: number
@@ -16,6 +17,8 @@ class Response {
 export function insert(req, res, next) {
     let zoneRequest: RequestBody = req.body;
     let zone = new Zone(zoneRequest);
+    const version = req.app.get(ZONE_VERSION) + 1;
+    
 
     let lat1 = CONFIG.limits.p1.lat;
     let lon1 = CONFIG.limits.p1.lon;
@@ -38,7 +41,7 @@ export function insert(req, res, next) {
             zone.bahias.push({ index: i, dis: false, reserva: null })
         }
 
-        //zone.localizacion.type = "Point"
+        zone.version = version;
 
         insertToRes(res, req.collection, zone, (id) => {
             return new Response(true, `${id}`, false)

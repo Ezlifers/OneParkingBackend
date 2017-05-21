@@ -4,6 +4,8 @@ export const DEFAULT_TIMES = "tiempos"
 
 export const DEFAULT_PRICE = "precio"
 export const DEFAULT_USER_CAR = "vehiculosUsuario"
+export const ZONE_VERSION = "zoneVersion"
+
 export const PERMISSIONS = "permissions"
 
 export const CONFIG_ID = "configID"

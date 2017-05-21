@@ -1,6 +1,7 @@
 import { ObjectID } from 'mongodb'
 import { updateToSimpleRes } from '../../../util/response-util'
 import { TimeRange } from '../models/_index'
+import { ZONE_VERSION } from '../../../config/constants';
 
 interface RequestBody {
     default: boolean
@@ -10,8 +11,11 @@ interface RequestBody {
 export function updateShedule(req, res, next) {
     let id = new ObjectID(req.params.id)
     let body: RequestBody = req.body
-    
+    const version = req.app.get(ZONE_VERSION) + 1;
+    req.app.set(ZONE_VERSION, version)
+        
     let updated = {
+        version: version,
         "configuracion.defaultTiempos": body.default,
         "configuracion.tiempos": body.tiempos
     }
