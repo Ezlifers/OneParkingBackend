@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import { selectCollection, validateToken, validatePermission, ResourcePermisions } from '../../middlewares/_index'
 import { STTM, SUPER, SUPERVISOR, AUX, CLIENT } from '../../config/constants'
-import { deleteZone, deleteAuxs, getAuxs, getBays, getList, getState, getZone, insert, updateZone, updateBayDisability, updateBays, updateShedule, updateTimes } from './services/_index'
+import { deleteZone, deleteAuxs, getAuxs, getBays, getList, getState, getStates,getZone, insert, updateZone, updateBayDisability, updateBays, updateShedule, updateTimes } from './services/_index'
 
 export const ZONES = 'zonas'
 
@@ -17,6 +17,9 @@ api.get('/:id', validateToken, validatePermission('getZone'), getZone)
 
 perm.add('getList', [SUPER, STTM, SUPERVISOR, AUX, CLIENT])
 api.get('/', validateToken, validatePermission('getList'), getList)
+
+perm.add('getStates', [SUPER, STTM, SUPERVISOR, AUX, CLIENT])
+api.get('/estados', validateToken, validatePermission('getStates'), getStates)
 
 perm.add('getBays', [SUPER, STTM, SUPERVISOR, AUX, CLIENT])
 api.get('/:id/bahias', validateToken, validatePermission('getBays'), getBays)

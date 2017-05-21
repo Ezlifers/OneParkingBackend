@@ -225,7 +225,7 @@ export let timeReserve = {};
 
 export function reserveAdded(idZone: string, bay: number, timeReq:number,date:Date, dis:boolean){
     let time = timeReq + date.getTime() - Date.now();    
-    ioGlobal.to("states").emit("global_state", {id: idZone, type:RESERVE});
+    ioGlobal.to("states").emit("global_state", {id: idZone, type:RESERVE, dis:dis});
     let timeout = setTimeout(() => { 
         ioGlobal.to("states").emit("global_state", {id: idZone, type:END_RESERVE, dis:dis});
     }, time);
