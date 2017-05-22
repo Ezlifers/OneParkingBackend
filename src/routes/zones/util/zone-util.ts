@@ -38,7 +38,7 @@ export class QueryZone extends Query {
         }
 
         if(this.version > -1){
-            this.q.version = {$gte:this.version}
+            this.q.version = {$gt:this.version}
         }
 
     }
