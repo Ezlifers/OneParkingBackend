@@ -12,6 +12,7 @@ export class QueryZone extends Query {
     bays: boolean
     lite: boolean
     version: number
+    location: boolean
 
     constructor(query: any) {
         super(query)
@@ -20,12 +21,16 @@ export class QueryZone extends Query {
         this.state = query.state ? query.state == 'true' : false
         this.bays = query.bays ? query.bays == 'true' : false
         this.disability = query.disability ? query.disability == 'true' : false
+        this.location = query.location ? query.location == 'true' : false
         this.lite = query.lite ? query.lite == 'true' : false
         this.version = query.version ? parseInt(query.version) : -1
         this.projection = {}
 
         if (!this.settings)
             this.projection.configuracion = 0
+
+        if(!this.location)
+            this.projection.localizacion = 0
 
         if (!this.bays && !this.state)
             this.projection.bahias = 0

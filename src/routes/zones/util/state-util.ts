@@ -30,8 +30,7 @@ export class QueryStates extends Query { // No se usa ningun parametro de Query
         this.projection = {
             nombre: 0,
             direccion: 0,
-            codigo: 0,
-            localizacion: 0
+            codigo: 0
         };
 
         if (defaultTimesActive(this.day, this.timeHour, app)) {
