@@ -29,7 +29,7 @@ export function stopReserve(req, res, next) {
 
         zoneCollection.updateOne({ _id: new ObjectID(doc.zona.id) }, { $set: { [`bahias.${reserve.zona.bahia}.reserva.suspendida`]: true } })
 
-        calculateFreeTime(reserve, current).then((freeToken) => {
+        calculateFreeTime(reserve, current, req.app).then((freeToken) => {
             reserveCollection.update({_id:id},{$set:{suspendida:true, fechaSuspencion:current, tiempoLibre:freeToken.freeTime, remuneracion: freeToken.retribution}})
             let transaction:Transaction={
                 fecha: current,

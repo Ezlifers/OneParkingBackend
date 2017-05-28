@@ -5,7 +5,7 @@ import { TIME_RANGE, IMG_USER_DEFAULT } from './constants'
 export const CONFIG = {
     secret: '0n3P4rK1n6',
     database: 'mongodb://localhost:27017/oneparkingapp2',
-    permissionVersion:2,
+    permissionVersion: 2,
     city: 'Popayan',
     limits: {
         p1: {
@@ -32,12 +32,12 @@ export const INITIAL_USER = new Sttm({
 })
 
 export const DEFAULT_BEHAVIOR: IConfig = {
-    precio: 600,
+    precio: [500, 1100, 1800, 2600, 3600, 4800, 6200, 7800], // $ x tiempoMin < tiempoMax
     vehiculosUsuario: 5,
-    tiempoMax: 3600,
-    tiempoMin: 600,
-    tiempos: [{ tipo: TIME_RANGE[0], horarios: [{ d: true, ti: 495, tf: 1080, dp: false, p: 1500 }] }
-        , { tipo: TIME_RANGE[1], horarios: [{ d: true, ti: 480, tf: 1080, dp: true, p: 0 }] }
+    tiempoMax: 7200, //Seg
+    tiempoMin: 900,  //Seg
+    tiempos: [{ tipo: TIME_RANGE[0], horarios: [{ d: true, ti: 480, tf: 1080 }] }
+        , { tipo: TIME_RANGE[1], horarios: [{ d: true, ti: 480, tf: 1080 }] }
         , { tipo: TIME_RANGE[2], horarios: [] }
     ]
 }

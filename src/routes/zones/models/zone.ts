@@ -1,5 +1,5 @@
 import { ObjectID } from 'mongodb'
-import { Bay, Config, State } from './_index'
+import { Bay, TimeRange, State } from './_index'
 
 export class Point {
     type: string
@@ -16,9 +16,10 @@ export class ZoneBase {
 }
 
 export class Zone extends ZoneBase {
-    //TODO: Actulizar el nombre de nBahias a bahias, se quita el numero de bahias (por analizar)
+    
     bahias: Bay[]
-    configuracion: Config
+    defaultTiempos: Boolean
+    tiempos: TimeRange[]
     estado?: State
     
     constructor(base?: ZoneBase) {

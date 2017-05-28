@@ -53,7 +53,7 @@ export function validateExtend(zone: Zone, bay: number, time: number, app: Appli
     if (reserve == null || reserve.suspendida)
         return true
     else {
-        let timeMax = zone.configuracion.defaultTiempoMax ? app.get(DEFAULT_TIME_MAX) : zone.configuracion.tiempoMax
+        let timeMax = app.get(DEFAULT_TIME_MAX)
         let timeReq = reserve.tiempo + time
         return timeReq <= timeMax
     }
@@ -63,59 +63,30 @@ interface freeTimeToken {
     freeTime: number
     retribution: number
 }
-export function calculateFreeTime(reserve: Reserve, current: Date): Promise<freeTimeToken> {
+export function calculateFreeTime(reserve: Reserve, current: Date, app:Application): Promise<freeTimeToken> {
 
     let promise = new Promise<freeTimeToken>((resolve, reject) => {
 
         let result: freeTimeToken = { freeTime: 0, retribution: 0 }
         let reserveStart = reserve.fecha.getTime() / 1000
         let reserveTimeTotal = reserve.tiempoTotal + reserveStart
-        let timeDelta = (current.getTime() / 1000) - reserveStart
+        let timeOut = reserveTimeTotal - current.getTime() / 1000
 
-        let timeUsed = 0
-        let costPaid = 0
-        let timefounded = false
-
-        if (timeDelta >= 0) {
-            for (let cost of reserve.costoInicial) {
-                timeUsed += cost.tiempo
-                costPaid += cost.valor
-                let free = timeDelta - timeUsed
-                if (free <= 0) {
-                    free *= -1
-                    timefounded = true
-                    timeUsed -= free
-                    costPaid -= (cost.precio * free / reserve.tiempoMin)
-                    break
-                }
+        if(timeOut >= 0){
+            result.freeTime = timeOut
+            let timePaid = (current.getTime() / 1000) - reserveStart
+            let prices:number[] = app.get(DEFAULT_PRICE)
+            let pricePosition = Math.round(timePaid / reserve.tiempoMin)
+            if (timePaid % reserve.tiempoMin > 0) {
+                pricePosition++
             }
-            if (!timefounded) {
-                for (let ext of reserve.extensiones) {
-                    for (let cost of ext.costo) {
-                        timeUsed += cost.tiempo
-                        costPaid += cost.valor
-                        let free = timeDelta - timeUsed
-                        if (free <= 0) {
-                            free *= -1
-                            timefounded = true
-                            timeUsed -= free
-                            costPaid -= (cost.precio * free / reserve.tiempoMin)
-                            break
-                        }
-                    }
-                }
-            }
-
-            result.freeTime = reserveTimeTotal - timeUsed
-
-            let retribution = reserve.costoTotal - costPaid
-            retribution = retribution - (retribution % 100)
-            result.retribution = retribution
-
+            let costPaid = prices[pricePosition]
+            result.retribution = reserve.costoTotal - costPaid
             resolve(result)
-        } else {
+        }else{
             reject()
         }
+        
     })
 
     return promise
@@ -124,21 +95,16 @@ export function calculateFreeTime(reserve: Reserve, current: Date): Promise<free
 interface CostToken {
     cost?: number
     time?: number
-    description?: Cost[]
+    description?: Cost
     minTime?: number
 
 }
-export function calculateCost(zone: Zone, time: number, current: Date, app: Application): Promise<CostToken> {
+export function calculateCost(zone: Zone, time: number, current: Date, app: Application, timeReserved: number = 0): Promise<CostToken> {
 
     let promise = new Promise<CostToken>((resolve, reject) => {
+
         let result: CostToken = { time: time }
-        let times: TimeRange[]
-
-        if (zone.configuracion.defaultTiempos)
-            times = app.get(DEFAULT_TIMES)
-        else
-            times = zone.configuracion.tiempos
-
+        let times: TimeRange[] = zone.defaultTiempos ? app.get(DEFAULT_TIMES) : zone.tiempos
 
         let currentDay = current.getDay()
         let day: TimeRange
@@ -150,15 +116,13 @@ export function calculateCost(zone: Zone, time: number, current: Date, app: Appl
             day = times[2]
 
         let currentMin = (current.getHours() * 60) + current.getMinutes()
-        let timeOut = false
-        let timeOutDelta = 0
         let shedulePos = 0
 
         for (let shedule of day.horarios) {
             if (currentMin >= shedule.ti && currentMin <= shedule.tf) {
                 if ((currentMin + (time / 60)) > shedule.tf) {
-                    timeOut = true
-                    timeOutDelta = ((currentMin - shedule.tf) * 60) + time
+                    const timeOutDelta = ((currentMin - shedule.tf) * 60) + time
+                    time = time - timeOutDelta
                 }
                 break
             }
@@ -168,48 +132,17 @@ export function calculateCost(zone: Zone, time: number, current: Date, app: Appl
         let shedule = day.horarios[shedulePos]
         if (shedule.d) {
 
-            let minPrice: number
+            let prices: number[] = app.get(DEFAULT_PRICE)
+            let timeMin = app.get(DEFAULT_TIME_MIN)
 
-            if (shedule.dp)
-                minPrice = app.get(DEFAULT_PRICE)
-            else
-                minPrice = shedule.p
-
-            if (zone.configuracion.defaultTiempoMin)
-                result.minTime = app.get(DEFAULT_TIME_MIN)
-            else
-                result.minTime = zone.configuracion.tiempoMin
-
-            if (timeOut) {
-
-                let initialTime = time - timeOutDelta
-                result.cost = minPrice * (initialTime / result.minTime)
-                result.description = [{ valor: result.cost, tiempo: initialTime, precio: minPrice }]
-
-                let sheduleNextPos = shedulePos + 1
-                if (sheduleNextPos >= day.horarios.length || shedule.tf != day.horarios[sheduleNextPos].ti || !day.horarios[sheduleNextPos].d) {
-
-                    result.time = initialTime
-
-                } else {
-
-                    let sheduleNext = day.horarios[sheduleNextPos]
-                    if (sheduleNext.dp)
-                        sheduleNext.p = app.get(DEFAULT_PRICE)
-
-                    let value = sheduleNext.p * (timeOutDelta / result.minTime)
-                    result.description.push({ valor: value, precio: sheduleNext.p, tiempo: timeOutDelta })
-                    result.cost += value
-                }
-
-            } else {
-                result.cost = minPrice * (time / result.minTime)
-                result.description = [{ valor: result.cost, tiempo: time, precio: minPrice }]
+            let pricePosition = Math.round((time + timeReserved) / timeMin)
+            if (time % timeMin > 0) {
+                pricePosition++
             }
 
-            result.cost /= 100
-            result.cost = Math.round(result.cost)
-            result.cost = result.cost * 100
+            result.cost = prices[pricePosition]
+            result.description = { valor: result.cost, tiempo: time }
+
             resolve(result)
         } else {
             reject()
@@ -219,35 +152,37 @@ export function calculateCost(zone: Zone, time: number, current: Date, app: Appl
     return promise
 }
 
+//IO
+
 let RESERVE = 0;
 let END_RESERVE = 1;
 export let timeReserve = {};
 
-export function reserveAdded(idZone: string, bay: number, timeReq:number,date:Date, dis:boolean){
-    let time = timeReq + date.getTime() - Date.now();    
-    ioGlobal.to("states").emit("global_state", {id: idZone, type:RESERVE, dis:dis});
-    let timeout = setTimeout(() => { 
-        ioGlobal.to("states").emit("global_state", {id: idZone, type:END_RESERVE, dis:dis});
+export function reserveAdded(idZone: string, bay: number, timeReq: number, date: Date, dis: boolean) {
+    let time = timeReq + date.getTime() - Date.now();
+    ioGlobal.to("states").emit("global_state", { id: idZone, type: RESERVE, dis: dis });
+    let timeout = setTimeout(() => {
+        ioGlobal.to("states").emit("global_state", { id: idZone, type: END_RESERVE, dis: dis });
     }, time);
     timeReserve[`${idZone}_${bay}`] = timeout;
 }
 
-export function reserveStoped(idZone: string, bay: number, dis:boolean){
+export function reserveStoped(idZone: string, bay: number, dis: boolean) {
     let timeout = timeReserve[`${idZone}_${bay}`];
-    clearTimeout(timeout);    
-    ioGlobal.to("states").emit("global_state", {id: idZone, type:END_RESERVE, dis:dis});
+    clearTimeout(timeout);
+    ioGlobal.to("states").emit("global_state", { id: idZone, type: END_RESERVE, dis: dis });
 }
 
-export function reserveExtended(idZone:string, bay:number, totalTime:number, date:Date, dis:boolean){
-    let newTime = totalTime + date.getTime() - Date.now();    
+export function reserveExtended(idZone: string, bay: number, totalTime: number, date: Date, dis: boolean) {
+    let newTime = totalTime + date.getTime() - Date.now();
     let timeout = timeReserve[`${idZone}_${bay}`];
-    clearTimeout(timeout);    
-    let newTimeout = setTimeout(() => { 
-        ioGlobal.to("states").emit("global_state", {id: idZone, type:END_RESERVE, dis:dis});
+    clearTimeout(timeout);
+    let newTimeout = setTimeout(() => {
+        ioGlobal.to("states").emit("global_state", { id: idZone, type: END_RESERVE, dis: dis });
     }, newTime);
     timeReserve[`${idZone}_${bay}`] = timeout;
 }
 
-export function zoneBayUpdated(idZone:string, bay:number, reserve:ZoneReserve){
-    ioZones.to(idZone).emit("reserves", {bay:bay, reserve: reserve});
+export function zoneBayUpdated(idZone: string, bay: number, reserve: ZoneReserve) {
+    ioZones.to(idZone).emit("reserves", { bay: bay, reserve: reserve });
 }

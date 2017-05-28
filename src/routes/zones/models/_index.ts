@@ -1,4 +1,4 @@
 export * from './bay'
-export * from './config'
+export * from './times'
 export * from './zone'
 export * from './state'

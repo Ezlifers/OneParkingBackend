@@ -45,47 +45,50 @@ export function extendReserve(req, res, next) {
         let reserve = zone.bahias[body.bahia].reserva
 
         if (reserve.id == req.params.id && validateExtend(zone, body.bahia, body.tiempo, req.app)) {
-            calculateCost(zone, body.tiempo, current, req.app).then((costToken) => {
+            calculateCost(zone, body.tiempo, current, req.app, reserve.tiempo).then((costToken) => {
 
                 getOneToFailRes(res, req.collection, { _id: req.idSelf }, null, (doc) => {
                     let cash = doc.saldo
-                    if (cash < costToken.cost) {
+                    let cost = costToken.cost - reserve.costo
+                    let timeTotal = costToken.time + reserve.tiempo
+
+                    if (cash < cost) {
                         res.send(new Response(false, null, null, null, null, null, null, false, true))
                     } else {
-                        let remainingCash = cash - costToken.cost
+
+                        let remainingCash = cash - cost
                         let transaction: Transaction = {
                             fecha: current,
                             tipo: EXTEND_RESERVE,
                             usuario: { id: req.idSelf, tipo: CLIENT, saldoRestante: remainingCash },
                             reserva: idReserve,
-                            valor: costToken.cost
+                            valor: cost
                         }
                         transactionCollection.insertOne(transaction)
-                        let time = body.tiempo + reserve.tiempo
-                        let cost = costToken.cost + reserve.costo
 
                         let extension: Extension = {
                             fecha: current,
-                            costo: costToken.description
+                            tiempo: costToken.time,
+                            valor: cost
                         }
 
                         reserveCollection.updateOne({ _id: idReserve }, {
                             $set: {
-                                tiempoTotal: time,
-                                costoTotal: cost
+                                tiempoTotal: timeTotal,
+                                costoTotal: costToken.cost
                             }, $push: { extensiones: extension }
                         })
 
                         zoneCollection.updateOne({ _id: new ObjectID(body.id) }, {
                             $set: {
-                                [`bahias.${body.bahia}.reserva.tiempo`]: time
-                                , [`bahias.${body.bahia}.reserva.costo`]: cost
+                                [`bahias.${body.bahia}.reserva.tiempo`]: timeTotal
+                                , [`bahias.${body.bahia}.reserva.costo`]: costToken.cost
                             }
                         });
 
                         req.collection.updateOne({ _id: req.idSelf }, { $set: { saldo: remainingCash } })
-                        reserveExtended(body.id, body.bahia, time*1000, reserve.fecha,zone.bahias[body.bahia].dis);
-                        res.send(new Response(true, body.bahia, `${reserve.id}`, costToken.cost, cost,remainingCash ,current, false, false))
+                        reserveExtended(body.id, body.bahia, timeTotal * 1000, reserve.fecha, zone.bahias[body.bahia].dis);
+                        res.send(new Response(true, body.bahia, `${reserve.id}`, cost, costToken.cost, remainingCash, current, false, false))
                     }
                 })
             }, () => {

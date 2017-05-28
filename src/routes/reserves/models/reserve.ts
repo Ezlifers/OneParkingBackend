@@ -15,13 +15,11 @@ export interface User {
 
 export interface Cost {
     tiempo: number
-    valor: number
-    precio: number
+    valor: number    
 }
 
-export interface Extension{
-    fecha:Date
-    costo:Cost[]
+export interface Extension extends Cost{
+    fecha:Date    
 }
 
 export interface Reserve {
@@ -33,7 +31,7 @@ export interface Reserve {
     discapacidad: boolean
     tiempoMin: number
     tiempoTotal: number
-    costoInicial: Cost[]
+    costoInicial: Cost
     costoTotal: number
     extensiones:Extension[]
     suspendida: boolean

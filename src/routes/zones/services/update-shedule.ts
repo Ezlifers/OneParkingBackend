@@ -14,11 +14,5 @@ export function updateShedule(req, res, next) {
     const version = req.app.get(ZONE_VERSION) + 1;
     req.app.set(ZONE_VERSION, version)
         
-    let updated = {
-        version: version,
-        "configuracion.defaultTiempos": body.default,
-        "configuracion.tiempos": body.tiempos
-    }
-    
-    updateToSimpleRes(res, req.collection, { _id: id }, updated)
+    updateToSimpleRes(res, req.collection, { _id: id }, {tiempos: body.tiempos, defaultTiempos: body.default, version: version})
 }

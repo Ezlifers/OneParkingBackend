@@ -18,7 +18,7 @@ export function insert(req, res, next) {
     let zoneRequest: RequestBody = req.body;
     let zone = new Zone(zoneRequest);
     const version = req.app.get(ZONE_VERSION) + 1;
-    
+
 
     let lat1 = CONFIG.limits.p1.lat;
     let lon1 = CONFIG.limits.p1.lon;
@@ -30,27 +30,20 @@ export function insert(req, res, next) {
 
 
     if (latZone < lat1 && latZone > lat2 && lonZone < lon2 && lonZone > lon1) {
-        zone.configuracion = {
-            tiempoMax: 0, defaultTiempoMax: true
-            , tiempoMin: 0, defaultTiempoMin: true
-            , tiempos: [], defaultTiempos: true
-        }
 
+        zone.defaultTiempos = true;
+        zone.tiempos =[];
         zone.bahias = [];
+
         for (let i = 0; i < zoneRequest.nBahias; i++) {
             zone.bahias.push({ index: i, dis: false, reserva: null })
         }
-
         zone.version = version;
-
         insertToRes(res, req.collection, zone, (id) => {
             return new Response(true, `${id}`, false)
         }, () => {
             return new Response(false, null, false)
         })
-
-
-
     } else {
         res.send(new Response(false, null, true))
     }

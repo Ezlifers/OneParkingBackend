@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import { selectCollection, validateToken, validatePermission, ResourcePermisions } from '../../middlewares/_index'
 import { STTM, SUPER, SUPERVISOR, AUX, CLIENT } from '../../config/constants'
-import { deleteZone, deleteAuxs, getAuxs, getBays, getList, getState, getStates,getZone, insert, updateZone, updateBayDisability, updateBays, updateShedule, updateTimes } from './services/_index'
+import { deleteZone, deleteAuxs, getAuxs, getBays, getList, getState, getStates,getZone, insert, updateZone, updateBayDisability, updateBays, updateShedule } from './services/_index'
 
 export const ZONES = 'zonas'
 
@@ -38,9 +38,6 @@ api.put('/:id/bahias/discapacidad', validateToken, validatePermission('updateBay
 
 perm.add('updateBays', [SUPER, STTM])
 api.put('/:id/bahias', validateToken, validatePermission('updateBays'), updateBays)
-
-perm.add('updateTimes', [SUPER, STTM])
-api.put('/:id/tiempos', validateToken, validatePermission('updateTimes'), updateTimes)
 
 //TODO:cambiar tiempouso por horario
 perm.add('updateShedule', [SUPER, STTM])

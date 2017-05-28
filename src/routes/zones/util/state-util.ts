@@ -30,18 +30,20 @@ export class QueryStates extends Query { // No se usa ningun parametro de Query
         this.projection = {
             nombre: 0,
             direccion: 0,
-            codigo: 0
+            codigo: 0,
+            tiempos:0,
+            defaultTiempos:0
         };
 
         if (defaultTimesActive(this.day, this.timeHour, app)) {
             this.q = {
                 $or: [
-                    { "configuracion.defaultTiempos": true }
-                    , { [`configuracion.tiempos.${this.day}.horarios`]: { $elemMatch: { ti: { $lte: this.timeHour }, tf: { $gt: this.timeHour }, d: true } } }
+                    { defaultTiempos: true }
+                    , { [`tiempos.${this.day}.horarios`]: { $elemMatch: { ti: { $lte: this.timeHour }, tf: { $gt: this.timeHour }, d: true } } }
                 ]
             };
         } else {
-            this.q = { "configuracion.defaultTiempos": false, [`configuracion.tiempos.${this.day}.horarios`]: { $elemMatch: { ti: { $lte: this.timeHour }, tf: { $gt: this.timeHour }, d: true } } };
+            this.q = { defaultTiempos: false, [`tiempos.${this.day}.horarios`]: { $elemMatch: { ti: { $lte: this.timeHour }, tf: { $gt: this.timeHour }, d: true } } };
         }
 
         if (this.prev) {
@@ -67,8 +69,7 @@ export function defaultTimesActive(day: number, hour: number, app: Application):
 export function setUpStates(current: Date, query: QueryStates, zones: Zone[]): Promise<any> {
     let promise = new Promise((resolve) => {
         for (let zone of zones) {
-            setUpState(zone, current, true, false);
-            delete zone.configuracion;           
+            setUpState(zone, current, true, false);                    
         }
         resolve()
     })

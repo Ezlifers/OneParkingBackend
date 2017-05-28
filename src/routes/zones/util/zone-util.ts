@@ -4,9 +4,7 @@ import { Query } from '../../../util/response-util'
 import { DEFAULT_PRICE, DEFAULT_TIME_MAX, DEFAULT_TIME_MIN, DEFAULT_TIMES } from '../../../config/constants'
 
 export class QueryZone extends Query {
-    settings: boolean
-    //TODO:Cambiar global por defaults
-    defaults: boolean
+    times: string //all, none, description    
     disability: boolean
     state: boolean
     bays: boolean
@@ -16,8 +14,7 @@ export class QueryZone extends Query {
 
     constructor(query: any) {
         super(query)
-        this.settings = query.settings ? query.settings == 'true' : false
-        this.defaults = query.defaults ? query.defaults == 'true' : false
+        this.times = query.times ? query.times : 'description'
         this.state = query.state ? query.state == 'true' : false
         this.bays = query.bays ? query.bays == 'true' : false
         this.disability = query.disability ? query.disability == 'true' : false
@@ -26,8 +23,11 @@ export class QueryZone extends Query {
         this.version = query.version ? parseInt(query.version) : -1
         this.projection = {}
 
-        if (!this.settings)
-            this.projection.configuracion = 0
+        if (this.times == 'none'){
+            this.projection.tiempos = 0;
+            this.projection.defaultTiempos = 0;
+        }
+            
 
         if(!this.location)
             this.projection.localizacion = 0
@@ -49,31 +49,12 @@ export class QueryZone extends Query {
     }
 }
 
-export function setUpDefaults(zone: Zone, app: Application, defaults: boolean) {
-    let config = zone.configuracion
-
-    if (config.defaultTiempoMax)
-        config.tiempoMax = app.get(DEFAULT_TIME_MAX)
-    if (config.defaultTiempoMin)
-        config.tiempoMin = app.get(DEFAULT_TIME_MIN)
-    if (config.defaultTiempos)
-        config.tiempos = app.get(DEFAULT_TIMES)
-
-    for (let tiempo of config.tiempos) {
-        for (let horario of tiempo.horarios) {
-            if (horario.dp)
-                horario.p = app.get(DEFAULT_PRICE)
-            if (!defaults)
-                delete horario.dp
-        }
+export function setUpTimes(zone: Zone, app: Application, type: string) {    
+    if (zone.defaultTiempos)
+        zone.tiempos = app.get(DEFAULT_TIMES)    
+    if (type == 'description') {
+        delete zone.defaultTiempos        
     }
-
-    if (!defaults) {
-        delete config.defaultTiempoMax
-        delete config.defaultTiempoMin
-        delete config.defaultTiempos
-    }
-
 }
 
 export function makeState(zone: Zone, current: Date, showDis: boolean): State {
@@ -132,13 +113,13 @@ export function setUpState(zone: Zone, current: Date, showDis: boolean, showBays
 
 export function setUpZone(app: Application, current: Date, query: QueryZone, zones: Zone[]): Promise<any> {
     let promise = new Promise((resolve) => {
-        if (query.settings || query.state) {
+        if (query.times != 'none' || query.state) {
             for (let zone of zones) {
                 if (query.state) {
                     setUpState(zone, current, query.disability, query.bays)
                 }
-                if (query.settings)
-                    setUpDefaults(zone, app, query.defaults)
+                if (query.times != 'none')
+                    setUpTimes(zone, app, query.times)
             }
         }
         resolve()
