@@ -15,7 +15,7 @@ export const SUPER = "Super"
 export const STTM = "Sttm"
 export const SUPERVISOR = "Supervisor"
 export const AUX = "Auxiliar"
-export const CLIENT = "Client"
+export const CLIENT = "Cliente"
 
 export const IMG_USER_NAME_DEFAULT = "unknown.jpg"
 export const IMG_USER_DEFAULT = `/public/imgsrc/${IMG_USER_NAME_DEFAULT}`

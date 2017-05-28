@@ -4,7 +4,7 @@ import { STTM, SUPER, SUPERVISOR, AUX, CLIENT} from '../../config/constants'
 import { getList } from './services/_index'
 //import {  } from '../_generic/_index'
 
-export const TRANSACTIONS = 'trasacciones'
+export const TRANSACTIONS = 'transacciones'
 
 const api = Router()
 const perm = new ResourcePermisions(TRANSACTIONS)

@@ -11,7 +11,7 @@ export function addCar(req, res, next) {
 
     let maxCars = req.app.get(DEFAULT_USER_CAR)
     let car:Car = req.body
-
+    console.log("ID:"+req.idSelf)
     getOneToFailRes(res, req.collection, { _id: req.idSelf }, null, (doc) => {
 
         let client: Client = doc

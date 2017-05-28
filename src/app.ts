@@ -32,7 +32,7 @@ MongoClient.connect(CONFIG.database).then((db) => {
   db.collection("configuracion").findOne({}).then((r) => {
     if (r == null) {
       db.collection("configuracion").insertOne(DEFAULT_BEHAVIOR).then((r) => {
-        console.log(JSON.stringify(r))
+        console.log("ID:"+JSON.stringify(r.insertedId))
         setConfigApp(DEFAULT_BEHAVIOR, r.insertedId)
         let user = INITIAL_USER;
         user.password = `${HmacSHA1(user.password, CONFIG.secret)}`

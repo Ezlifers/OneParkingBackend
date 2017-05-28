@@ -21,7 +21,7 @@ export class QueryZone extends Query {
         this.state = query.state ? query.state == 'true' : false
         this.bays = query.bays ? query.bays == 'true' : false
         this.disability = query.disability ? query.disability == 'true' : false
-        this.location = query.location ? query.location == 'true' : false
+        this.location = query.location ? query.location == 'true' : true
         this.lite = query.lite ? query.lite == 'true' : false
         this.version = query.version ? parseInt(query.version) : -1
         this.projection = {}

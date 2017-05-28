@@ -12,14 +12,14 @@ api.use(selectCollection(ZONES))
 perm.add('insert', [SUPER, STTM])
 api.post('/', validateToken, validatePermission('insert'), insert)
 
-perm.add('getZone', [SUPER, STTM, SUPERVISOR, AUX, CLIENT])
-api.get('/:id', validateToken, validatePermission('getZone'), getZone)
-
 perm.add('getList', [SUPER, STTM, SUPERVISOR, AUX, CLIENT])
 api.get('/', validateToken, validatePermission('getList'), getList)
 
 perm.add('getStates', [SUPER, STTM, SUPERVISOR, AUX, CLIENT])
 api.get('/estados', validateToken, validatePermission('getStates'), getStates)
+
+perm.add('getZone', [SUPER, STTM, SUPERVISOR, AUX, CLIENT])
+api.get('/:id', validateToken, validatePermission('getZone'), getZone)
 
 perm.add('getBays', [SUPER, STTM, SUPERVISOR, AUX, CLIENT])
 api.get('/:id/bahias', validateToken, validatePermission('getBays'), getBays)
