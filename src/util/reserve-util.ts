@@ -63,7 +63,7 @@ interface freeTimeToken {
     freeTime: number
     retribution: number
 }
-export function calculateFreeTime(reserve: Reserve, current: Date, app:Application): Promise<freeTimeToken> {
+export function calculateFreeTime(reserve: Reserve, current: Date, app: Application): Promise<freeTimeToken> {
 
     let promise = new Promise<freeTimeToken>((resolve, reject) => {
 
@@ -72,21 +72,22 @@ export function calculateFreeTime(reserve: Reserve, current: Date, app:Applicati
         let reserveTimeTotal = reserve.tiempoTotal + reserveStart
         let timeOut = reserveTimeTotal - current.getTime() / 1000
 
-        if(timeOut >= 0){
+        if (timeOut >= 0) {
             result.freeTime = timeOut
             let timePaid = (current.getTime() / 1000) - reserveStart
-            let prices:number[] = app.get(DEFAULT_PRICE)
-            let pricePosition = Math.round(timePaid / reserve.tiempoMin)
-            if (timePaid % reserve.tiempoMin > 0) {
+            let timeMin = app.get(DEFAULT_TIME_MIN)
+            let prices: number[] = app.get(DEFAULT_PRICE)
+            let pricePosition = Math.round((timePaid / timeMin) - 1)
+            if (timePaid % timeMin > 0) {
                 pricePosition++
             }
             let costPaid = prices[pricePosition]
             result.retribution = reserve.costoTotal - costPaid
             resolve(result)
-        }else{
+        } else {
             reject()
         }
-        
+
     })
 
     return promise
@@ -135,7 +136,7 @@ export function calculateCost(zone: Zone, time: number, current: Date, app: Appl
             let prices: number[] = app.get(DEFAULT_PRICE)
             let timeMin = app.get(DEFAULT_TIME_MIN)
 
-            let pricePosition = Math.round((time + timeReserved) / timeMin)
+            let pricePosition = Math.round(((time + timeReserved) / timeMin) - 1)
             if (time % timeMin > 0) {
                 pricePosition++
             }
