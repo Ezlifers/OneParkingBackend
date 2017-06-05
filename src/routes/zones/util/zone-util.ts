@@ -40,6 +40,7 @@ export class QueryZone extends Query {
             this.projection.direccion = 0
             this.projection.localizacion = 0
             this.projection.codigo = 0
+            this.version = 0
         }
 
         if (this.version > -1) {
