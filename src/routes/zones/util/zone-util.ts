@@ -23,13 +23,13 @@ export class QueryZone extends Query {
         this.version = query.version ? parseInt(query.version) : -1
         this.projection = {}
 
-        if (this.times == 'none'){
+        if (this.times == 'none') {
             this.projection.tiempos = 0;
             this.projection.defaultTiempos = 0;
         }
-            
 
-        if(!this.location)
+
+        if (!this.location)
             this.projection.localizacion = 0
 
         if (!this.bays && !this.state)
@@ -42,18 +42,18 @@ export class QueryZone extends Query {
             this.projection.codigo = 0
         }
 
-        if(this.version > -1){
-            this.q.version = {$gt:this.version}
+        if (this.version > -1) {
+            this.q.version = { $gt: this.version }
         }
 
     }
 }
 
-export function setUpTimes(zone: Zone, app: Application, type: string) {    
+export function setUpTimes(zone: Zone, app: Application, type: string) {
     if (zone.defaultTiempos)
-        zone.tiempos = app.get(DEFAULT_TIMES)    
+        zone.tiempos = app.get(DEFAULT_TIMES)
     if (type == 'description') {
-        delete zone.defaultTiempos        
+        delete zone.defaultTiempos
     }
 }
 
@@ -100,15 +100,11 @@ export function makeState(zone: Zone, current: Date, showDis: boolean): State {
 }
 
 export function setUpState(zone: Zone, current: Date, showDis: boolean, showBays: boolean) {
-
     let state = makeState(zone, current, showDis)
-
+    zone.estado = state
     if (!showBays) {
         delete zone.bahias
     }
-
-    zone.estado = state
-
 }
 
 export function setUpZone(app: Application, current: Date, query: QueryZone, zones: Zone[]): Promise<any> {

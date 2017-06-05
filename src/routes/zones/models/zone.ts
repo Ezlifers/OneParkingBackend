@@ -21,6 +21,7 @@ export class Zone extends ZoneBase {
     defaultTiempos: Boolean
     tiempos: TimeRange[]
     estado?: State
+    tipo?:number
     
     constructor(base?: ZoneBase) {
         super()

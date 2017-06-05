@@ -4,7 +4,11 @@ import { TimeRange } from '../models/_index';
 
 import { Query } from '../../../util/response-util';
 import { Zone, State } from '../models/_index'
-import { setUpState } from './zone-util';
+import { setUpState, makeState } from './zone-util';
+
+const FREE = 0;
+const TARIFICATION = 1;
+const PROHIBITED = 2;
 
 export class QueryStates extends Query { // No se usa ningun parametro de Query
     lat: number;
@@ -30,12 +34,10 @@ export class QueryStates extends Query { // No se usa ningun parametro de Query
         this.projection = {
             nombre: 0,
             direccion: 0,
-            codigo: 0,
-            tiempos:0,
-            defaultTiempos:0
+            codigo: 0
         };
 
-        if (defaultTimesActive(this.day, this.timeHour, app)) {
+        /*if (defaultTimesActive(this.day, this.timeHour, app)) {
             this.q = {
                 $or: [
                     { defaultTiempos: true }
@@ -44,7 +46,7 @@ export class QueryStates extends Query { // No se usa ningun parametro de Query
             };
         } else {
             this.q = { defaultTiempos: false, [`tiempos.${this.day}.horarios`]: { $elemMatch: { ti: { $lte: this.timeHour }, tf: { $gt: this.timeHour }, d: true } } };
-        }
+        }*/
 
         if (this.prev) {
             this.q.$and = [{ localizacion: { $geoWithin: { $centerSphere: [[this.lon, this.lat], LOC_RADIUS / 6378.1] } } }, { localizacion: { $not: { $geoWithin: { $centerSphere: [[this.prevLon, this.prevLat], LOC_RADIUS / 6378.1] } } } }];
@@ -66,12 +68,33 @@ export function defaultTimesActive(day: number, hour: number, app: Application):
     return active;
 }
 
-export function setUpStates(current: Date, query: QueryStates, zones: Zone[]): Promise<any> {
+export function setUpStates(app: Application, current: Date, query: QueryStates, zones: Zone[]): Promise<any> {
     let promise = new Promise((resolve) => {
         for (let zone of zones) {
-            setUpState(zone, current, true, false);                    
+            setUpStateSchedule(app, zone, current, true, query.day, query.timeHour);
         }
         resolve()
     })
     return promise;
+}
+
+function setUpStateSchedule(app: Application, zone: Zone, current: Date, showDis: boolean, day: number, timeHour) {
+
+    let times: TimeRange[] = zone.defaultTiempos ? app.get(DEFAULT_TIMES) : zone.tiempos
+    let schedule = times[day].horarios.find((s) => {
+        return timeHour >= s.ti && timeHour < s.tf
+    });
+
+    if (schedule == null) {
+        zone.tipo = FREE;
+    } else if (!schedule.d) {
+        zone.tipo = PROHIBITED;
+    } else {
+        zone.tipo = TARIFICATION;
+        let state = makeState(zone, current, showDis)
+        zone.estado = state
+    }
+    delete zone.bahias;
+    delete zone.defaultTiempos;
+    delete zone.tiempos;
 }
