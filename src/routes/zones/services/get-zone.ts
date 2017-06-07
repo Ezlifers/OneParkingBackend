@@ -8,7 +8,7 @@ export function getZone(req, res, next) {
     let query = new QueryZone(req.query)
     getOneToFailRes(res, req.collection, { _id: id }, query.projection, (doc) => {
         let zones: Zone[] = [doc]
-        setUpZone(req.app, new Date, query, zones).then(() => {
+        setUpZone(req, new Date, query, zones).then(() => {
             res.send(zones[0])
         })
     })

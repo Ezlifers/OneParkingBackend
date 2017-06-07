@@ -1,5 +1,7 @@
+import { cacheConfig } from '../../../util/cache-util';
+import { IConfig } from '../../config/models/_index';
 import { Application } from 'express';
-import { DEFAULT_TIMES, LOC_RADIUS } from '../../../config/constants';
+import { LOC_RADIUS } from '../../../config/constants';
 import { TimeRange } from '../models/_index';
 
 import { Query } from '../../../util/response-util';
@@ -20,7 +22,7 @@ export class QueryStates extends Query { // No se usa ningun parametro de Query
     day: number; // 0 L-V, 1 S, 2 D (Obligatorio)
     timeHour: number; // hours in day (Obligatorio)
 
-    constructor(query: any, app: Application) {
+    constructor(query: any) {
         super(query);
         this.lat = query.lat ? parseFloat(query.lat) : null;
         this.lon = query.lon ? parseFloat(query.lon) : null;
@@ -56,7 +58,7 @@ export class QueryStates extends Query { // No se usa ningun parametro de Query
     }
 }
 
-export function defaultTimesActive(day: number, hour: number, app: Application): boolean {
+/*export function defaultTimesActive(day: number, hour: number, app: Application): boolean {
     let active = false;
     let times: TimeRange[] = app.get(DEFAULT_TIMES);
     for (let h of times[day].horarios) {
@@ -66,21 +68,23 @@ export function defaultTimesActive(day: number, hour: number, app: Application):
         }
     }
     return active;
-}
+}*/
 
-export function setUpStates(app: Application, current: Date, query: QueryStates, zones: Zone[]): Promise<any> {
+export function setUpStates(req: any, current: Date, query: QueryStates, zones: Zone[]): Promise<any> {
     let promise = new Promise((resolve) => {
-        for (let zone of zones) {
-            setUpStateSchedule(app, zone, current, true, query.day, query.timeHour);
-        }
-        resolve()
-    })
+        cacheConfig(req, config => {
+            for (let zone of zones) {
+                setUpStateSchedule(config, zone, current, true, query.day, query.timeHour);
+            }
+            resolve()
+        });
+    });
     return promise;
 }
 
-function setUpStateSchedule(app: Application, zone: Zone, current: Date, showDis: boolean, day: number, timeHour) {
+function setUpStateSchedule(config: IConfig, zone: Zone, current: Date, showDis: boolean, day: number, timeHour) {
 
-    let times: TimeRange[] = zone.defaultTiempos ? app.get(DEFAULT_TIMES) : zone.tiempos
+    let times: TimeRange[] = zone.defaultTiempos ? config.tiempos : zone.tiempos
     let schedule = times[day].horarios.find((s) => {
         return timeHour >= s.ti && timeHour < s.tf
     });

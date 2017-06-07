@@ -7,5 +7,6 @@ export interface IConfig {
     tiempoMax: number //Sec
     tiempoMin: number //Sec
     tiempos: TimeRange[]
+    version: number
 }
 

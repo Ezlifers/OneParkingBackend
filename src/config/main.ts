@@ -39,6 +39,7 @@ export const DEFAULT_BEHAVIOR: IConfig = {
     tiempos: [{ tipo: TIME_RANGE[0], horarios: [{ d: true, ti: 480, tf: 1080 }] }
         , { tipo: TIME_RANGE[1], horarios: [{ d: true, ti: 480, tf: 1080 }] }
         , { tipo: TIME_RANGE[2], horarios: [] }
-    ]
+    ],
+    version: 0
 }
 

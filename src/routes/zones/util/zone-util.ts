@@ -1,7 +1,7 @@
-import { Application } from 'express'
-import { Zone, State } from '../models/_index'
-import { Query } from '../../../util/response-util'
-import { DEFAULT_PRICE, DEFAULT_TIME_MAX, DEFAULT_TIME_MIN, DEFAULT_TIMES } from '../../../config/constants'
+import { IConfig } from '../../config/models/_index';
+import { cacheConfig } from '../../../util/cache-util';
+import { Zone, State } from '../models/_index';
+import { Query } from '../../../util/response-util';
 
 export class QueryZone extends Query {
     times: string //all, none, description    
@@ -9,7 +9,6 @@ export class QueryZone extends Query {
     state: boolean
     bays: boolean
     lite: boolean
-    version: number
     location: boolean
 
     constructor(query: any) {
@@ -20,8 +19,7 @@ export class QueryZone extends Query {
         this.disability = query.disability ? query.disability == 'true' : false
         this.location = query.location ? query.location == 'true' : true
         this.lite = query.lite ? query.lite == 'true' : false
-        this.version = query.version ? parseInt(query.version) : -1
-        this.projection = {}
+        this.projection = { version:0}
 
         if (this.times == 'none') {
             this.projection.tiempos = 0;
@@ -40,19 +38,14 @@ export class QueryZone extends Query {
             this.projection.direccion = 0
             this.projection.localizacion = 0
             this.projection.codigo = 0
-            this.version = 0
+                
         }
-
-        if (this.version > -1) {
-            this.q.version = { $gt: this.version }
-        }
-
     }
 }
 
-export function setUpTimes(zone: Zone, app: Application, type: string) {
+export function setUpTimes(zone: Zone, config: IConfig, type: string) {
     if (zone.defaultTiempos)
-        zone.tiempos = app.get(DEFAULT_TIMES)
+        zone.tiempos = config.tiempos
     if (type == 'description') {
         delete zone.defaultTiempos
     }
@@ -108,16 +101,18 @@ export function setUpState(zone: Zone, current: Date, showDis: boolean, showBays
     }
 }
 
-export function setUpZone(app: Application, current: Date, query: QueryZone, zones: Zone[]): Promise<any> {
+export function setUpZone(req: any, current: Date, query: QueryZone, zones: Zone[]): Promise<any> {
     let promise = new Promise((resolve) => {
         if (query.times != 'none' || query.state) {
-            for (let zone of zones) {
-                if (query.state) {
-                    setUpState(zone, current, query.disability, query.bays)
+            cacheConfig(req, config => {
+                for (let zone of zones) {
+                    if (query.state) {
+                        setUpState(zone, current, query.disability, query.bays)
+                    }
+                    if (query.times != 'none')
+                        setUpTimes(zone, config, query.times)
                 }
-                if (query.times != 'none')
-                    setUpTimes(zone, app, query.times)
-            }
+            });
         }
         resolve()
     })

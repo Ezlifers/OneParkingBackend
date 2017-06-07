@@ -44,7 +44,7 @@ export function reserve(req, res, next) {
     getOneToFailRes(res, zoneCollection, { _id: idZone }, null, (doc) => {
 
         validateAvailability(doc, body.fecha, body.discapacidad).then((availableToken) => {
-            calculateCost(doc, body.tiempo, body.fecha, req.app).then((costToken) => {
+            calculateCost(req, doc, body.tiempo, body.fecha).then((costToken) => {
 
                 getOneToFailRes(res, req.collection, { _id: req.idSelf }, null, (doc) => {
 
@@ -78,7 +78,7 @@ export function reserve(req, res, next) {
                         reserveCollection.insertOne(reserve).then((result) => {
                             let transaction: Transaction = {
                                 fecha: body.fecha,
-                                usuario: { id: req.idSelf, tipo: CLIENT, saldoRestante:remainingCash },
+                                usuario: { id: req.idSelf, tipo: CLIENT, saldoRestante: remainingCash },
                                 tipo: RESERVE,
                                 valor: reserve.costoTotal,
                                 reserva: result.insertedId
@@ -97,13 +97,13 @@ export function reserve(req, res, next) {
                             zoneCollection.updateOne({ _id: new ObjectID(doc._id) }, {
                                 $set: { [`bahias.${availableToken.bay}.reserva`]: zoneReserve }
                             })
-                            
-                            reserveAdded(body.id, availableToken.bay, body.tiempo * 1000,body.fecha, body.discapacidad);
+
+                            reserveAdded(body.id, availableToken.bay, body.tiempo * 1000, body.fecha, body.discapacidad);
                             zoneBayUpdated(body.id, availableToken.bay, zoneReserve);
-                            res.send(new Response(true, availableToken.bay, `${result.insertedId}`, reserve.costoTotal,remainingCash, body.fecha, false, false))
+                            res.send(new Response(true, availableToken.bay, `${result.insertedId}`, reserve.costoTotal, remainingCash, body.fecha, false, false))
 
                         }, (err) => {
-                            res.send(new Response(false, null, null, null, null,null, false, false))
+                            res.send(new Response(false, null, null, null, null, null, false, false))
                         })
                     }
                 })

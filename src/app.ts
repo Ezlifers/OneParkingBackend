@@ -6,8 +6,9 @@ import * as path from 'path';
 import cookieParser = require('cookie-parser'); // this module doesn't use the ES6 default export yet
 
 import { MongoClient, ObjectID } from 'mongodb'
+import { createClient } from 'redis'
 import { CONFIG, DEFAULT_BEHAVIOR, INITIAL_USER } from './config/main'
-import { DEFAULT_PRICE, DEFAULT_TIME_MAX, DEFAULT_TIME_MIN, DEFAULT_TIMES, DEFAULT_USER_CAR, CONFIG_ID, PERMISSIONS, ZONE_VERSION } from './config/constants'
+import { CONFIG_DEFAULTS, CONFIG_ID, PERMISSIONS, DATA_VERSION } from './config/constants';
 import { IConfig } from './routes/config/models/_index'
 import { ResourcePermisions } from './middlewares/validate_permission'
 import { HmacSHA1 } from 'crypto-js'
@@ -24,24 +25,39 @@ import config from './routes/config/api'
 
 const app: express.Express = express();
 var mdb;
+let clientRedis = createClient();
+
 
 MongoClient.connect(CONFIG.database).then((db) => {
   console.log("Conexion a mongo exitosa");
   mdb = db
   //CONFIGURACION 
-  db.collection("configuracion").findOne({}).then((r) => {
-    if (r == null) {
+  db.collection("configuracion").findOne({}).then((result) => {
+    let version = 0;
+    if (result == null) {
       db.collection("configuracion").insertOne(DEFAULT_BEHAVIOR).then((r) => {
-        console.log("ID:"+JSON.stringify(r.insertedId))
-        setConfigApp(DEFAULT_BEHAVIOR, r.insertedId)
+        clientRedis.set(CONFIG_DEFAULTS, JSON.stringify(DEFAULT_BEHAVIOR));
+        clientRedis.set(CONFIG_ID, "" + r.insertedId);
+
         let user = INITIAL_USER;
         user.password = `${HmacSHA1(user.password, CONFIG.secret)}`
         db.collection("usuarios").insert(user)
-        db.collection("zonas").createIndex({localizacion:"2dsphere"})
+        db.collection("zonas").createIndex({ localizacion: "2dsphere" })
       })
     } else {
-      let conf: IConfig = r
-      setConfigApp(conf, r._id)
+      let conf: IConfig = result;
+      clientRedis.set(CONFIG_DEFAULTS, JSON.stringify(conf));
+      clientRedis.set(CONFIG_ID, result._id);
+      version = conf.version;
+
+      //ZONE VERSION
+      db.collection("zonas").findOne({ $query: {}, $orderby: { version: -1 } }).then(zone => {
+        if (zone != null) {
+          version = version >= zone.version ? version : zone.version;
+        }
+        clientRedis.set(DATA_VERSION, ""+version);        
+      })
+
     }
 
   })
@@ -65,17 +81,6 @@ MongoClient.connect(CONFIG.database).then((db) => {
       db.collection("permisos").insertOne({ version: CONFIG.permissionVersion, permissions: permissions })
     }
   })
-
-  //ZONE VERSION
-  db.collection("zonas").findOne({$query:{},$orderby:{version:-1}}).then(zone=>{
-    if(zone == null){
-      app.set(ZONE_VERSION, 0)  
-    }else{
-      app.set(ZONE_VERSION, zone.version)
-    }    
-  })
-  
-
 }, (err) => {
   console.log("ERROR al conectarse en mongo : " + err)
 })
@@ -89,8 +94,9 @@ app.use('/public', express.static(__dirname + '/public'));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use((req: any, res, next) => {
-  req.db = mdb
-  next()
+  req.db = mdb;
+  req.redis = clientRedis;
+  next();
 })
 
 app.use('/api/usuarios', users.api)
@@ -135,16 +141,6 @@ app.use((error: any, req, res, next) => {
   });
   return null;
 });
-
-
-function setConfigApp(conf: IConfig, id: ObjectID) {
-  app.set(DEFAULT_PRICE, conf.precio)
-  app.set(DEFAULT_USER_CAR, conf.vehiculosUsuario)
-  app.set(DEFAULT_TIME_MAX, conf.tiempoMax)
-  app.set(DEFAULT_TIME_MIN, conf.tiempoMin)
-  app.set(DEFAULT_TIMES, conf.tiempos)
-  app.set(CONFIG_ID, id)
-}
 
 function getPermissions(resourcePermissions: ResourcePermisions[]) {
 

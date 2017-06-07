@@ -1,17 +1,23 @@
-import { IConfig } from '../models/_index'
-import { updateToSimpleRes } from '../../../util/response-util'
-import { CONFIG_ID, DEFAULT_PRICE, DEFAULT_TIME_MAX, DEFAULT_TIME_MIN, DEFAULT_TIMES, DEFAULT_USER_CAR } from '../../../config/constants'
+import { cacheVersion } from '../../../util/cache-util';
+import { CONFIG_DEFAULTS, CONFIG_ID, DATA_VERSION } from '../../../config/constants';
+import { IConfig } from '../models/_index';
+import { updateToSimpleRes } from '../../../util/response-util';
 import { ObjectID } from 'mongodb';
 
 export function update(req, res, next) {
-    let app = req.app
-    let id = new ObjectID(app.get(CONFIG_ID))
-    let config = req.body as IConfig
-    updateToSimpleRes(res, req.collection, { _id: id }, config, () => {
-        app.set(DEFAULT_PRICE, config.precio)
-        app.set(DEFAULT_USER_CAR, config.vehiculosUsuario)
-        app.set(DEFAULT_TIME_MAX, config.tiempoMax)
-        app.set(DEFAULT_TIME_MIN, config.tiempoMin)
-        app.set(DEFAULT_TIMES, config.tiempos)
-    })
+    req.redis.get(CONFIG_ID, (err, id) => {
+
+        cacheVersion(req, version => {
+            let config = req.body as IConfig;
+            config.version = version + 1;
+
+            let filter = id ? { _id: new ObjectID(id) } : {};
+
+            updateToSimpleRes(res, req.collection, filter, config, () => {
+                req.redis.set(CONFIG_DEFAULTS, JSON.stringify(config));
+                req.redis.set(DATA_VERSION, ""+config.version);
+            });
+        });
+
+    });
 }

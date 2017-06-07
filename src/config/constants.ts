@@ -1,14 +1,9 @@
-export const DEFAULT_TIME_MAX = "tiempoMax"
-export const DEFAULT_TIME_MIN = "tiempoMin"
-export const DEFAULT_TIMES = "tiempos"
+export const CONFIG_DEFAULTS = "config";
+export const CONFIG_ID = "configId";
 
-export const DEFAULT_PRICE = "precio"
-export const DEFAULT_USER_CAR = "vehiculosUsuario"
-export const ZONE_VERSION = "zoneVersion"
-
+export const DATA_VERSION = "dataVersion"
 export const PERMISSIONS = "permissions"
 
-export const CONFIG_ID = "configID"
 export const TIME_RANGE = ['Lunes-Viernes', 'Sabado', 'Domingo']
 
 export const SUPER = "Super"

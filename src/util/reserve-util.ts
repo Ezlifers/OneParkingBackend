@@ -1,11 +1,12 @@
+import { cacheConfig } from './cache-util';
 import { clearTimeout, setTimeout } from 'timers';
-import { Application } from 'express'
+import { RedisClient } from 'redis'
 import { Zone, TimeRange } from '../routes/zones/models/_index'
 import { Reserve } from '../routes/reserves/models/_index'
 import { Reserve as ZoneReserve } from '../routes/zones/models/_index'
 import { Cost } from '../routes/reserves/models/_index'
-import { DEFAULT_TIMES, DEFAULT_PRICE, DEFAULT_TIME_MIN, DEFAULT_TIME_MAX } from '../config/constants'
 import { ioGlobal, ioZones } from '../www';
+import { IConfig } from '../routes/config/models/_index'
 
 interface AvailableToken {
     available: boolean
@@ -46,14 +47,14 @@ export function validateAvailability(zone: Zone, current: Date, disability: bool
     return promise
 }
 
-export function validateExtend(zone: Zone, bay: number, time: number, app: Application): boolean {
+export function validateExtend(zone: Zone, bay: number, time: number, config: IConfig): boolean {
 
     let reserve = zone.bahias[bay].reserva
 
     if (reserve == null || reserve.suspendida)
         return true
     else {
-        let timeMax = app.get(DEFAULT_TIME_MAX)
+        let timeMax = config.tiempoMax
         let timeReq = reserve.tiempo + time
         return timeReq <= timeMax
     }
@@ -63,32 +64,33 @@ interface freeTimeToken {
     freeTime: number
     retribution: number
 }
-export function calculateFreeTime(reserve: Reserve, current: Date, app: Application): Promise<freeTimeToken> {
+export function calculateFreeTime(req: any, reserve: Reserve, current: Date): Promise<freeTimeToken> {
 
     let promise = new Promise<freeTimeToken>((resolve, reject) => {
 
-        let result: freeTimeToken = { freeTime: 0, retribution: 0 }
-        let reserveStart = reserve.fecha.getTime() / 1000
-        let reserveTimeTotal = reserve.tiempoTotal + reserveStart
-        let timeOut = reserveTimeTotal - current.getTime() / 1000
+        cacheConfig(req, config => {
+            let result: freeTimeToken = { freeTime: 0, retribution: 0 }
+            let reserveStart = reserve.fecha.getTime() / 1000
+            let reserveTimeTotal = reserve.tiempoTotal + reserveStart
+            let timeOut = reserveTimeTotal - current.getTime() / 1000
 
-        if (timeOut >= 0) {
-            result.freeTime = timeOut
-            let timePaid = (current.getTime() / 1000) - reserveStart
-            let timeMin = app.get(DEFAULT_TIME_MIN)
-            let prices: number[] = app.get(DEFAULT_PRICE)
-            let pricePosition = Math.round((timePaid / timeMin) - 1)
-            if (timePaid % timeMin > 0) {
-                pricePosition++
+            if (timeOut >= 0) {
+                result.freeTime = timeOut
+                let timePaid = (current.getTime() / 1000) - reserveStart
+                let timeMin = config.tiempoMin;
+                let prices: number[] = config.precio
+                let pricePosition = Math.round((timePaid / timeMin) - 1)
+                if (timePaid % timeMin > 0) {
+                    pricePosition++
+                }
+                let costPaid = prices[pricePosition]
+                result.retribution = reserve.costoTotal - costPaid
+                resolve(result)
+            } else {
+                reject()
             }
-            let costPaid = prices[pricePosition]
-            result.retribution = reserve.costoTotal - costPaid
-            resolve(result)
-        } else {
-            reject()
-        }
-
-    })
+        });
+    });
 
     return promise
 }
@@ -100,56 +102,57 @@ interface CostToken {
     minTime?: number
 
 }
-export function calculateCost(zone: Zone, time: number, current: Date, app: Application, timeReserved: number = 0): Promise<CostToken> {
+export function calculateCost(req: any, zone: Zone, time: number, current: Date, timeReserved: number = 0): Promise<CostToken> {
 
     let promise = new Promise<CostToken>((resolve, reject) => {
 
-        let result: CostToken = { time: time }
-        let times: TimeRange[] = zone.defaultTiempos ? app.get(DEFAULT_TIMES) : zone.tiempos
+        cacheConfig(req, config => {
+            let result: CostToken = { time: time }
+            let times: TimeRange[] = zone.defaultTiempos ? config.tiempos : zone.tiempos
 
-        let currentDay = current.getDay()
-        let day: TimeRange
-        if (currentDay < 6 && currentDay > 0)
-            day = times[0]
-        else if (currentDay == 6)
-            day = times[1]
-        else
-            day = times[2]
+            let currentDay = current.getDay()
+            let day: TimeRange
+            if (currentDay < 6 && currentDay > 0)
+                day = times[0]
+            else if (currentDay == 6)
+                day = times[1]
+            else
+                day = times[2]
 
-        let currentMin = (current.getHours() * 60) + current.getMinutes()
-        let shedulePos = 0
+            let currentMin = (current.getHours() * 60) + current.getMinutes()
+            let shedulePos = 0
 
-        for (let shedule of day.horarios) {
-            if (currentMin >= shedule.ti && currentMin <= shedule.tf) {
-                if ((currentMin + (time / 60)) > shedule.tf) {
-                    const timeOutDelta = ((currentMin - shedule.tf) * 60) + time
-                    time = time - timeOutDelta
+            for (let shedule of day.horarios) {
+                if (currentMin >= shedule.ti && currentMin <= shedule.tf) {
+                    if ((currentMin + (time / 60)) > shedule.tf) {
+                        const timeOutDelta = ((currentMin - shedule.tf) * 60) + time
+                        time = time - timeOutDelta
+                    }
+                    break
                 }
-                break
-            }
-            shedulePos++
-        }
-
-        let shedule = day.horarios[shedulePos]
-        if (shedule.d) {
-
-            let prices: number[] = app.get(DEFAULT_PRICE)
-            let timeMin = app.get(DEFAULT_TIME_MIN)
-
-            let pricePosition = Math.round(((time + timeReserved) / timeMin) - 1)
-            if (time % timeMin > 0) {
-                pricePosition++
+                shedulePos++
             }
 
-            result.cost = prices[pricePosition]
-            result.description = { valor: result.cost, tiempo: time }
+            let shedule = day.horarios[shedulePos]
+            if (shedule.d) {
 
-            resolve(result)
-        } else {
-            reject()
-        }
+                let prices: number[] = config.precio
+                let timeMin = config.tiempoMin
 
-    })
+                let pricePosition = Math.round(((time + timeReserved) / timeMin) - 1)
+                if (time % timeMin > 0) {
+                    pricePosition++
+                }
+
+                result.cost = prices[pricePosition]
+                result.description = { valor: result.cost, tiempo: time }
+
+                resolve(result)
+            } else {
+                reject()
+            }
+        });
+    });
     return promise
 }
 

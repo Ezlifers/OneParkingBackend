@@ -42,7 +42,7 @@ export function reserve(req, res, next) {
     
     getOneToFailRes(res, zoneCollection, { _id: idZone }, null, (doc) => {
         validateAvailability(doc, body.fecha, body.discapacidad).then((availableToken) => {
-            calculateCost(doc, body.tiempo, body.fecha, req.app).then((costToken) => {
+            calculateCost(req, doc, body.tiempo, body.fecha).then((costToken) => {
                 let reserve: Reserve = {
                     fecha: body.fecha,
                     zona: {

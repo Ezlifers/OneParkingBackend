@@ -1,7 +1,8 @@
+import { DATA_VERSION } from '../../../config/constants';
+import { cacheVersion } from '../../../util/cache-util';
 import { ObjectID } from 'mongodb'
 import { updateToSimpleRes } from '../../../util/response-util'
 import { TimeRange } from '../models/_index'
-import { ZONE_VERSION } from '../../../config/constants';
 
 interface RequestBody {
     default: boolean
@@ -11,8 +12,12 @@ interface RequestBody {
 export function updateShedule(req, res, next) {
     let id = new ObjectID(req.params.id)
     let body: RequestBody = req.body
-    const version = req.app.get(ZONE_VERSION) + 1;
-    req.app.set(ZONE_VERSION, version)
+    cacheVersion(req, version=>{
+        const newVersion = version + 1;
+        updateToSimpleRes(res, req.collection, { _id: id }, {tiempos: body.tiempos, defaultTiempos: body.default, version: newVersion},()=>{
+            req.redis.set(DATA_VERSION, "" + newVersion);
+        });
+    })
         
-    updateToSimpleRes(res, req.collection, { _id: id }, {tiempos: body.tiempos, defaultTiempos: body.default, version: version})
+    
 }
