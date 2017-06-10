@@ -18,6 +18,5 @@ export function update(req, res, next) {
                 req.redis.set(DATA_VERSION, ""+config.version);
             });
         });
-
     });
 }

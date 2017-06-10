@@ -21,7 +21,7 @@ export class Zone extends ZoneBase {
     defaultTiempos: Boolean
     tiempos: TimeRange[]
     estado?: State
-    tipo?:number
+    tipo?:number // Se envia desde servidor, FREE | PROHIBIDED | TARIFICATION
     
     constructor(base?: ZoneBase) {
         super()

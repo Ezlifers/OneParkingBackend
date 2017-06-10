@@ -10,7 +10,7 @@ export function deleteZone(req, res, next) {
     let id = new ObjectID(req.params.id);
     let body: RequestBody = req.body;
 
-    req.collection.updateOne({ _id: id }, { $pull: { zonas: { id: body.id } } }).then(result => {
+    req.collection.updateOne({ _id: id }, { $pull: { zonas: { id: body.id } }, $inc: { version: 1 } }).then(result => {
         res.send(new ResponseSimple(true));
     }).catch(err => {
         res.send(new ResponseSimple(false));

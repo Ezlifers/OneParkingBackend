@@ -1,3 +1,6 @@
+import { USERS } from './routes/users/api';
+import { AUXS } from './routes/auxs/api';
+import { ZONES } from './routes/zones/api';
 import * as cors from 'cors';
 import * as express from 'express';
 import * as logger from 'morgan';
@@ -8,7 +11,7 @@ import cookieParser = require('cookie-parser'); // this module doesn't use the E
 import { MongoClient, ObjectID } from 'mongodb'
 import { createClient } from 'redis'
 import { CONFIG, DEFAULT_BEHAVIOR, INITIAL_USER } from './config/main'
-import { CONFIG_DEFAULTS, CONFIG_ID, PERMISSIONS, DATA_VERSION } from './config/constants';
+import { AUX, CONFIG_DEFAULTS, CONFIG_ID, DATA_VERSION, PERMISSIONS } from './config/constants';
 import { IConfig } from './routes/config/models/_index'
 import { ResourcePermisions } from './middlewares/validate_permission'
 import { HmacSHA1 } from 'crypto-js'
@@ -41,21 +44,21 @@ MongoClient.connect(CONFIG.database).then((db) => {
 
         let user = INITIAL_USER;
         user.password = `${HmacSHA1(user.password, CONFIG.secret)}`
-        db.collection("usuarios").insert(user)
-        db.collection("zonas").createIndex({ localizacion: "2dsphere" })
+        db.collection(USERS).insert(user)
+        db.collection(ZONES).createIndex({ localizacion: "2dsphere" })
       })
     } else {
       let conf: IConfig = result;
       clientRedis.set(CONFIG_DEFAULTS, JSON.stringify(conf));
-      clientRedis.set(CONFIG_ID, result._id);
+      clientRedis.set(CONFIG_ID, ""+result._id);
       version = conf.version;
 
-      //ZONE VERSION
-      db.collection("zonas").findOne({ $query: {}, $orderby: { version: -1 } }).then(zone => {
+      //VERSION
+      db.collection(ZONES).findOne({ $query: {}, $orderby: { version: -1 } }).then(zone => {
         if (zone != null) {
           version = version >= zone.version ? version : zone.version;
         }
-        clientRedis.set(DATA_VERSION, ""+version);        
+        clientRedis.set(DATA_VERSION, "" + version);
       })
 
     }
@@ -80,7 +83,22 @@ MongoClient.connect(CONFIG.database).then((db) => {
       app.set(PERMISSIONS, permissions)
       db.collection("permisos").insertOne({ version: CONFIG.permissionVersion, permissions: permissions })
     }
-  })
+  });
+
+  //CACHE
+  //auxs
+  /*db.collection(USERS).find({ tipo: AUX }).toArray().then((r) => {
+      for(let user of r){
+        clientRedis.set(`Auxs:${user._id}`, JSON.stringify(user));        
+      }
+  });
+  //zones
+  db.collection(ZONES).find().toArray().then((r) => {
+    for(let zone of r){
+        clientRedis.set(`Zones:${zone._id}`, JSON.stringify(zone));        
+      }
+  });*/
+
 }, (err) => {
   console.log("ERROR al conectarse en mongo : " + err)
 })

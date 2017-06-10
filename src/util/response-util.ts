@@ -185,8 +185,14 @@ export function pullManyToSimpleRes(res: Response, collection: Collection, filte
 
 //PUSH
 
-export function pushToSimpleRes(res: Response, collection: Collection, id: ObjectID, push: Object) {
-    collection.updateOne({ _id: id }, { $push: push }).then(result => {
+export function pushToSimpleRes(res: Response, collection: Collection, id: ObjectID, push: Object, update?: any) {
+    let set = update;
+    if (set) {
+        set.$push = push;
+    } else {
+        set = { $push: push }
+    }
+    collection.updateOne({ _id: id }, set).then(result => {
         res.send(new ResponseSimple(true));
     }, () => {
         res.send(new ResponseSimple(false));

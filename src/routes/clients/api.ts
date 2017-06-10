@@ -2,13 +2,16 @@ import { USERS } from '../users/api';
 import { Router } from 'express'
 import { selectCollection, validateToken, validatePermission, ResourcePermisions } from '../../middlewares/_index'
 import { STTM, SUPER, SUPERVISOR, AUX, CLIENT } from '../../config/constants'
-import { addCar, addCash, deleteCar, extendReserve, getCars, getCash, reserve, stopReserve, updateCash } from './services/_index'
+import { getSetup, addCar, addCash, deleteCar, extendReserve, getCars, getCash, reserve, stopReserve, updateCash } from './services/_index'
 
 export const CLIENTS = 'clientes'
 
 const api = Router()
 const perm = new ResourcePermisions(CLIENTS)
 api.use(selectCollection(USERS, CLIENTS))
+
+perm.add('getSetup', [AUX])
+api.post('/configuracion', validateToken, validatePermission('getSetup'), getSetup)
 
 perm.add('addCar', [CLIENT])
 api.post('/vehiculos', validateToken, validatePermission('addCar'), addCar)

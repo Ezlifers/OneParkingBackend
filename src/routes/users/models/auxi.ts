@@ -22,4 +22,5 @@ export class Zone {
 export class Aux extends User {
     dispositivo: string;
     zonas: Zone[];
+    version: number;
 }

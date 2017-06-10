@@ -1,3 +1,4 @@
+import { AUX } from '../../../config/constants';
 import { User } from "../models/_index"
 import { HmacSHA1 } from 'crypto-js'
 import { saveUserImage } from "../../../util/img-util"
@@ -20,7 +21,7 @@ export function insert(req, res, next) {
     user.password = `${HmacSHA1(user.cedula, secret)}`
     user.activo = true
     user.validado = false
-
+    
     saveUserImage(user.imagen, (path) => {
         user.imagen = path
         insertUser(res, req.collection, user)
@@ -35,6 +36,7 @@ export function insert(req, res, next) {
 function insertUser(res, collection, user) {
 
     insertToRes(res, collection, user, (id) => {
+        
         return new Response(true, `${id}`, false)
     }, () => {
         return new Response(false, null, false)

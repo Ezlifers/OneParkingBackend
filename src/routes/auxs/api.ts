@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import { selectCollection, validateToken, validatePermission, ResourcePermisions } from '../../middlewares/_index'
 import { STTM, SUPER, SUPERVISOR, AUX, CLIENT } from '../../config/constants'
-import { update, addZone, deleteAux, deleteZone, deleteSchedule, extendReserve, getLocation, getZones, insertLocation, notifyClient, reserve, stopReserve, recharge } from './services/_index'
+import { getSetup, update, addZone, deleteAux, deleteZone, deleteSchedule, extendReserve, getLocation, getZones, insertLocation, notifyClient, reserve, stopReserve, recharge } from './services/_index'
 import { USERS } from '../users/api'
 
 export const AUXS = 'auxiliares'
@@ -12,6 +12,9 @@ api.use(selectCollection(USERS, AUXS))
 
 perm.add('recharge', [SUPER, STTM, AUX])
 api.post('/recarga', validateToken, validatePermission('recharge'), recharge)
+
+perm.add('getSetup', [AUX])
+api.post('/configuracion', validateToken, validatePermission('getSetup'), getSetup)
 
 perm.add('addZone', [SUPER, STTM])
 api.post('/:id/zonas', validateToken, validatePermission('addZone'), addZone)
