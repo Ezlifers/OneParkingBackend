@@ -18,7 +18,7 @@ class Response{
     constructor(public success:boolean
     ,public version?:number
     , public config?:IConfig
-    , public schdules?: AuxZone[]    
+    , public schedules?: AuxZone[]    
     , public zones?:Zone[]
     ){}
 }

@@ -1,3 +1,4 @@
+import { cacheConfig } from '../../../util/cache-util';
 import { ZONES } from '../../zones/api'
 import { RESERVES } from '../../reserves/api'
 import { TRANSACTIONS } from '../../transactions/api'
@@ -42,75 +43,75 @@ export function reserve(req, res, next) {
     let idZone = new ObjectID(body.id)
 
     getOneToFailRes(res, zoneCollection, { _id: idZone }, null, (doc) => {
-
         validateAvailability(doc, body.fecha, body.discapacidad).then((availableToken) => {
-            calculateCost(req, doc, body.tiempo, body.fecha).then((costToken) => {
+            cacheConfig(req, config => {
+                calculateCost(doc, body.tiempo, body.fecha, config).then((costToken) => {
+                    getOneToFailRes(res, req.collection, { _id: req.idSelf }, null, (doc) => {
 
-                getOneToFailRes(res, req.collection, { _id: req.idSelf }, null, (doc) => {
-
-                    let cash = doc.saldo
-                    if (cash < costToken.cost) {
-                        res.send(new Response(false, null, null, null, null, null, false, true))
-                    } else {
-                        let remainingCash = cash - costToken.cost
-                        let reserve: Reserve = {
-                            fecha: body.fecha,
-                            zona: {
-                                id: idZone,
-                                codigo: body.codigo,
-                                bahia: availableToken.bay
-                            },
-                            usuario: {
-                                id: req.idSelf,
-                                celular: body.celular,
-                                tipo: CLIENT
-                            },
-                            vehiculo: body.vehiculo,
-                            discapacidad: body.discapacidad,
-                            tiempoMin: costToken.minTime,
-                            tiempoTotal: costToken.time,
-                            costoTotal: costToken.cost,
-                            costoInicial: costToken.description,
-                            extensiones: [],
-                            suspendida: false
-                        }
-
-                        reserveCollection.insertOne(reserve).then((result) => {
-                            let transaction: Transaction = {
+                        let cash = doc.saldo
+                        if (cash < costToken.cost) {
+                            res.send(new Response(false, null, null, null, null, null, false, true))
+                        } else {
+                            let remainingCash = cash - costToken.cost
+                            let reserve: Reserve = {
                                 fecha: body.fecha,
-                                usuario: { id: req.idSelf, tipo: CLIENT, saldoRestante: remainingCash },
-                                tipo: RESERVE,
-                                valor: reserve.costoTotal,
-                                reserva: result.insertedId
-                            }
-
-                            transactionCollection.insertOne(transaction)
-                            let zoneReserve: ZoneReserve = {
-                                id: result.insertedId,
-                                fecha: body.fecha,
-                                costo: reserve.costoTotal,
-                                tiempo: reserve.tiempoTotal,
-                                usuario: { id: req.idSelf, tipo: CLIENT, celular: body.celular },
+                                zona: {
+                                    id: idZone,
+                                    codigo: body.codigo,
+                                    bahia: availableToken.bay
+                                },
+                                usuario: {
+                                    id: req.idSelf,
+                                    celular: body.celular,
+                                    tipo: CLIENT
+                                },
                                 vehiculo: body.vehiculo,
+                                discapacidad: body.discapacidad,
+                                tiempoMin: costToken.minTime,
+                                tiempoTotal: costToken.time,
+                                costoTotal: costToken.cost,
+                                costoInicial: costToken.description,
+                                extensiones: [],
                                 suspendida: false
                             }
-                            zoneCollection.updateOne({ _id: new ObjectID(doc._id) }, {
-                                $set: { [`bahias.${availableToken.bay}.reserva`]: zoneReserve }
+
+                            reserveCollection.insertOne(reserve).then((result) => {
+                                let transaction: Transaction = {
+                                    fecha: body.fecha,
+                                    usuario: { id: req.idSelf, tipo: CLIENT, saldoRestante: remainingCash },
+                                    tipo: RESERVE,
+                                    valor: reserve.costoTotal,
+                                    reserva: result.insertedId
+                                }
+
+                                transactionCollection.insertOne(transaction)
+                                let zoneReserve: ZoneReserve = {
+                                    id: result.insertedId,
+                                    fecha: body.fecha,
+                                    costo: reserve.costoTotal,
+                                    tiempo: reserve.tiempoTotal,
+                                    usuario: { id: req.idSelf, tipo: CLIENT, celular: body.celular },
+                                    vehiculo: body.vehiculo,
+                                    suspendida: false
+                                }
+                                zoneCollection.updateOne({ _id: new ObjectID(doc._id) }, {
+                                    $set: { [`bahias.${availableToken.bay}.reserva`]: zoneReserve }
+                                })
+
+                                reserveAdded(body.id, availableToken.bay, body.tiempo * 1000, body.fecha, body.discapacidad);
+                                zoneBayUpdated(body.id, availableToken.bay, zoneReserve);
+                                res.send(new Response(true, availableToken.bay, `${result.insertedId}`, reserve.costoTotal, remainingCash, body.fecha, false, false))
+
+                            }, (err) => {
+                                res.send(new Response(false, null, null, null, null, null, false, false))
                             })
+                        }
+                    })
 
-                            reserveAdded(body.id, availableToken.bay, body.tiempo * 1000, body.fecha, body.discapacidad);
-                            zoneBayUpdated(body.id, availableToken.bay, zoneReserve);
-                            res.send(new Response(true, availableToken.bay, `${result.insertedId}`, reserve.costoTotal, remainingCash, body.fecha, false, false))
-
-                        }, (err) => {
-                            res.send(new Response(false, null, null, null, null, null, false, false))
-                        })
-                    }
-                })
-
-            }, () => {
-                res.send(new Response(false, null, null, null, null, null, true, false))
-            })
+                }, () => {
+                    res.send(new Response(false, null, null, null, null, null, true, false))
+                });
+            });
         }, () => {
             res.send(new Response(false, null, null, null, null, null, true, false))
         })

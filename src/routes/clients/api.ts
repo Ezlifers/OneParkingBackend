@@ -11,7 +11,7 @@ const perm = new ResourcePermisions(CLIENTS)
 api.use(selectCollection(USERS, CLIENTS))
 
 perm.add('getSetup', [AUX])
-api.post('/configuracion', validateToken, validatePermission('getSetup'), getSetup)
+api.get('/configuracion', validateToken, validatePermission('getSetup'), getSetup)
 
 perm.add('addCar', [CLIENT])
 api.post('/vehiculos', validateToken, validatePermission('addCar'), addCar)

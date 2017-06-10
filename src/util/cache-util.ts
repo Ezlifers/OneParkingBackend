@@ -4,7 +4,7 @@ import { CONFIG_DEFAULTS, DATA_VERSION } from '../config/constants';
 import { IConfig } from '../routes/config/models/_index';
 
 
-export function cacheConfig(req: any, callback: (IConfig) => void) {
+export function cacheConfig(req: any,  callback: (IConfig) => void) {
     req.redis.get(CONFIG_DEFAULTS, (err, result) => {
         if (result) {
             callback(JSON.parse(result));

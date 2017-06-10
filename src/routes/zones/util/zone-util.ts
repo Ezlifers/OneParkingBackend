@@ -112,9 +112,12 @@ export function setUpZone(req: any, current: Date, query: QueryZone, zones: Zone
                     if (query.times != 'none')
                         setUpTimes(zone, config, query.times)
                 }
+                resolve()
             });
+        }else{
+            resolve()
         }
-        resolve()
+        
     })
     return promise
 }

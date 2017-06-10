@@ -102,56 +102,55 @@ interface CostToken {
     minTime?: number
 
 }
-export function calculateCost(req: any, zone: Zone, time: number, current: Date, timeReserved: number = 0): Promise<CostToken> {
+export function calculateCost(zone: Zone, time: number, current: Date, config: IConfig, timeReserved: number = 0): Promise<CostToken> {
 
     let promise = new Promise<CostToken>((resolve, reject) => {
 
-        cacheConfig(req, config => {
-            let result: CostToken = { time: time }
-            let times: TimeRange[] = zone.defaultTiempos ? config.tiempos : zone.tiempos
+        let result: CostToken = { time: time }
+        let times: TimeRange[] = zone.defaultTiempos ? config.tiempos : zone.tiempos
 
-            let currentDay = current.getDay()
-            let day: TimeRange
-            if (currentDay < 6 && currentDay > 0)
-                day = times[0]
-            else if (currentDay == 6)
-                day = times[1]
-            else
-                day = times[2]
+        let currentDay = current.getDay()
+        let day: TimeRange
+        if (currentDay < 6 && currentDay > 0)
+            day = times[0]
+        else if (currentDay == 6)
+            day = times[1]
+        else
+            day = times[2]
 
-            let currentMin = (current.getHours() * 60) + current.getMinutes()
-            let shedulePos = 0
+        let currentMin = (current.getHours() * 60) + current.getMinutes()
+        let shedulePos = 0
 
-            for (let shedule of day.horarios) {
-                if (currentMin >= shedule.ti && currentMin <= shedule.tf) {
-                    if ((currentMin + (time / 60)) > shedule.tf) {
-                        const timeOutDelta = ((currentMin - shedule.tf) * 60) + time
-                        time = time - timeOutDelta
-                    }
-                    break
+        for (let shedule of day.horarios) {
+            if (currentMin >= shedule.ti && currentMin <= shedule.tf) {
+                if ((currentMin + (time / 60)) > shedule.tf) {
+                    const timeOutDelta = ((currentMin - shedule.tf) * 60) + time
+                    time = time - timeOutDelta
                 }
-                shedulePos++
+                break
+            }
+            shedulePos++
+        }
+
+        let shedule = day.horarios[shedulePos]
+        if (shedule.d) {
+
+            let prices: number[] = config.precio
+            let timeMin = config.tiempoMin
+
+            let pricePosition = Math.round(((time + timeReserved) / timeMin) - 1)
+            if (time % timeMin > 0) {
+                pricePosition++
             }
 
-            let shedule = day.horarios[shedulePos]
-            if (shedule.d) {
+            result.cost = prices[pricePosition]
+            result.description = { valor: result.cost, tiempo: time }
 
-                let prices: number[] = config.precio
-                let timeMin = config.tiempoMin
+            resolve(result)
+        } else {
+            reject()
+        }
 
-                let pricePosition = Math.round(((time + timeReserved) / timeMin) - 1)
-                if (time % timeMin > 0) {
-                    pricePosition++
-                }
-
-                result.cost = prices[pricePosition]
-                result.description = { valor: result.cost, tiempo: time }
-
-                resolve(result)
-            } else {
-                reject()
-            }
-        });
     });
     return promise
 }

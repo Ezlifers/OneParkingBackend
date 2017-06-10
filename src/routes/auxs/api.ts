@@ -14,7 +14,7 @@ perm.add('recharge', [SUPER, STTM, AUX])
 api.post('/recarga', validateToken, validatePermission('recharge'), recharge)
 
 perm.add('getSetup', [AUX])
-api.post('/configuracion', validateToken, validatePermission('getSetup'), getSetup)
+api.get('/configuracion', validateToken, validatePermission('getSetup'), getSetup)
 
 perm.add('addZone', [SUPER, STTM])
 api.post('/:id/zonas', validateToken, validatePermission('addZone'), addZone)
