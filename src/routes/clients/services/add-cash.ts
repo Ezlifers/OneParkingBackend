@@ -1,6 +1,8 @@
 import { getOneToFailRes, updateToRes } from '../../../util/_index'
 import { ObjectID } from 'mongodb'
 
+
+//TODO: No utilizar sin transaccion
 interface RequestBody {
     saldo: number
 }

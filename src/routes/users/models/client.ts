@@ -8,9 +8,10 @@ export class Car {
 
 export class Client extends User {
 
-    discapacitado:boolean
-    email:string
-    vehiculos:Car[] 
-    saldo:number
+    discapacitado:boolean;
+    email:string;
+    vehiculos:Car[] ;
+    saldo:number;
+    ultimaTransaccion:Date;
 
 }

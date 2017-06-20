@@ -1,3 +1,4 @@
+import { saveCash } from '../util/cache-cash';
 import { cacheConfig } from '../../../util/cache-util';
 import { ZONES } from '../../zones/api'
 import { RESERVES } from '../../reserves/api'
@@ -88,7 +89,8 @@ export function extendReserve(req, res, next) {
                                 }
                             });
 
-                            req.collection.updateOne({ _id: req.idSelf }, { $set: { saldo: remainingCash } })
+                            req.collection.updateOne({ _id: req.idSelf }, { $set: { saldo: remainingCash, ultimaTransaccion: current } })
+                            saveCash(req, req.idSelf, remainingCash, current);
                             reserveExtended(body.id, body.bahia, timeTotal * 1000, reserve.fecha, zone.bahias[body.bahia].dis);
                             res.send(new Response(true, body.bahia, `${reserve.id}`, cost, costToken.cost, remainingCash, current, false, false))
                         }

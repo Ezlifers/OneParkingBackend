@@ -37,7 +37,7 @@ export function getSetup(req, res, next) {
                 for (let z of aux.zonas) {
                     ids.push(new ObjectID(z.id));
                 }
-                req.db.collection(ZONES).find({ _id: { $in: ids } }, { tiempos: 1, defaultTiempos: 1 }).toArray().then((docs) => {
+                req.db.collection(ZONES).find({ _id: { $in: ids } }, { tiempos: 1 }).toArray().then((docs) => {
                     for (let z of docs) {
                         let zoneInfo = { _id: z._id, tiempos: z.tiempos };
                         if (z.defaultTiempos) {

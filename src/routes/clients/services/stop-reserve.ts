@@ -1,3 +1,4 @@
+import { saveCash } from '../util/cache-cash';
 import { ZONES } from '../../zones/api'
 import { RESERVES } from '../../reserves/api'
 import { TRANSACTIONS } from '../../transactions/api'
@@ -34,7 +35,7 @@ export function stopReserve(req, res, next) {
             getOneToFailRes(res, req.collection, { _id: req.idSelf }, null, (doc) => {
                 
                 let cash = doc.saldo + freeToken.retribution
-                req.collection.updateOne({_id:req.idSelf},{$set:{saldo:cash}})
+                req.collection.updateOne({_id:req.idSelf},{$set:{saldo:cash, ultimaTransaccion:current}})
 
                 let transaction: Transaction = {
                     fecha: current,
@@ -44,6 +45,7 @@ export function stopReserve(req, res, next) {
                     remuneracion: freeToken.retribution
                 }
                 transactionCollection.insertOne(transaction)
+                saveCash(req, req.idSelf, cash, current);
                 reserveStoped(doc.zona.id, reserve.zona.bahia, reserve.discapacidad);
                 res.send(new Response(true, freeToken.retribution))
 

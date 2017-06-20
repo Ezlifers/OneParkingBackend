@@ -98,6 +98,8 @@ export function reserve(req, res, next) {
                                     $set: { [`bahias.${availableToken.bay}.reserva`]: zoneReserve }
                                 })
 
+                                req.collection.updateOne({ _id: req.idSelf }, {$set:{saldo:remainingCash, ultimaTransaccion: body.fecha}});
+
                                 reserveAdded(body.id, availableToken.bay, body.tiempo * 1000, body.fecha, body.discapacidad);
                                 zoneBayUpdated(body.id, availableToken.bay, zoneReserve);
                                 res.send(new Response(true, availableToken.bay, `${result.insertedId}`, reserve.costoTotal, remainingCash, body.fecha, false, false))

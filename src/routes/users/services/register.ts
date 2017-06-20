@@ -26,6 +26,7 @@ export function register(req, res, next) {
     usr.activo = true
     usr.validado = true
     usr.saldo = 0
+    usr.ultimaTransaccion = new Date();
     usr.vehiculos = []
 
     req.collection.findOne({ $or: [{ usuario: usr.usuario }, { celular: usr.celular }] }).then((doc) => {

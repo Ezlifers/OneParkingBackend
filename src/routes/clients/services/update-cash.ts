@@ -1,6 +1,7 @@
 import { ObjectID } from 'mongodb'
 import { updateToSimpleRes } from '../../../util/_index'
 
+//NO UTILIZAR SIN REGISTRAR TRANSACCION
 interface RequestBody{
     saldo:number
 }

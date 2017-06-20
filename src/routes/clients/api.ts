@@ -31,11 +31,12 @@ api.post('/detener/:id', validateToken, validatePermission('stopReserve'), stopR
 perm.add('getCash', [SUPER, STTM, CLIENT])
 api.get('/:id/saldo', validateToken, validatePermission('getCash'), getCash)
 
-perm.add('addCash', [SUPER, STTM])
+/*perm.add('addCash', [SUPER, STTM])
 api.post('/:id/saldo', validateToken, validatePermission('addCash'), addCash)
 
 perm.add('updateCash', [SUPER, STTM])
 api.put('/:id/saldo', validateToken, validatePermission('updateCash'), updateCash)
+*/
 
 perm.add('getCars', [SUPER, STTM, SUPERVISOR, AUX, CLIENT])
 api.get('/:id/vehiculos', validateToken, validatePermission('getCars'), getCars)
