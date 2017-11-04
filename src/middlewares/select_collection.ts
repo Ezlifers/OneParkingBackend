@@ -4,4 +4,4 @@ export function selectCollection(collection: string, resource?: string) {
         req.collection = req.db.collection(collection)
         next()
     }
-}
+}  

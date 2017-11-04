@@ -10,7 +10,7 @@ const api = Router()
 const perm = new ResourcePermisions(CLIENTS)
 api.use(selectCollection(USERS, CLIENTS))
 
-perm.add('getSetup', [AUX])
+perm.add('getSetup', [SUPER, STTM,SUPERVISOR, AUX,CLIENT])
 api.get('/configuracion', validateToken, validatePermission('getSetup'), getSetup)
 
 perm.add('addCar', [CLIENT])

@@ -94,10 +94,12 @@ function setUpStateSchedule(config: IConfig, zone: Zone, current: Date, showDis:
     } else if (!schedule.d) {
         zone.tipo = PROHIBITED;
     } else {
-        zone.tipo = TARIFICATION;
-        let state = makeState(zone, current, showDis)
-        zone.estado = state
+        zone.tipo = TARIFICATION;        
     }
+
+    let state = makeState(zone, current, showDis)
+    zone.estado = state
+
     delete zone.bahias;
     delete zone.defaultTiempos;
     delete zone.tiempos;

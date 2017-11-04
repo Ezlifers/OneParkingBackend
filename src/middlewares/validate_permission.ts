@@ -30,9 +30,9 @@ export function validatePermission(action: string) {
             if (actionPermission != undefined && actionPermission == true)
                 next()
             else
-                res.send(401, { msg: "Accion no permitida" })
+                res.status(401).send({ msg: "Accion no permitida" })
         } else {
-            res.send(401, { msg: "Accion no permitida" })
+            res.status(401).send({ msg: "Accion no permitida" })
         }       
         
     }

@@ -1,6 +1,6 @@
 import { USERS } from '../../users/api';
 import { RedisClient } from 'redis';
-import { ObjectID } from "@types/mongodb";
+import { ObjectID } from "mongodb";
 
 export class SavedCash{
     cash:number;
@@ -21,7 +21,7 @@ export function cacheCash(req: any, id: string, callback: (err:any, cash: number
             callback(null, saved.cash, saved.transaction);
         } else {
             let idO = new ObjectID(id);
-            req.collection(USERS).findOne({ _id: idO }, {saldo:1}).then((doc)=>{
+            req.db.collection(USERS).findOne({ _id: idO }, {saldo:1}).then((doc)=>{
                 if(doc){
                     let save:SavedCash = {cash:doc.saldo, transaction: doc.ultimoMovimiento};
                     redis.set(`CLIENTE:${id}`, JSON.stringify(save));

@@ -11,7 +11,7 @@ class QuerySetup {
     version: number;
     constructor(query: any) {
         this.onlyVersion = query.onlyVersion ? query.onlyVersion == 'true' : false;
-        this.version = query.version ? parseInt(query.onlyVersion) : -1;
+        this.version = query.version ? parseInt(query.version) : -1;
     }
 }
 

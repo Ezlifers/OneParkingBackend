@@ -9,6 +9,7 @@ export function updateZone(req, res, next) {
     const id = new ObjectID(req.params.id);
     const body: ZoneBase = req.body;
     const userCollection = req.db.collection(USERS);
+    body.localizacion.type = "Point";
     cacheVersion(req, version => {
         body.version = version + 1;
         userCollection.updateMany({ tipo: AUX, "zonas.id": req.params.id }
