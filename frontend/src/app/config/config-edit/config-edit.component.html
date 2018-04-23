@@ -1,0 +1,51 @@
+<div class="section">
+    <form #form="ngForm" class="col s12">
+        <div class="row">
+            <div class="input-field col s12 m6">
+                <input name="vmax" type="number" [(ngModel)]="newConfig.vehiculosUsuario" [class.invalid]="!vMax.valid && !vMax.pristine"
+                    class="validate" #vMax="ngModel" required>
+                <label class="active" for="vMax">Vehiculos por usuario</label>
+            </div>
+
+            <div class="input-field col s12 m6">
+                <input name="tmin" type="number" [(ngModel)]="newConfig.tiempoMin" [class.invalid]="!tMin.valid && !tMin.pristine" class="validate"
+                    #tMin="ngModel" required>
+                <label class="active" for="tMin">Tiempo Minimo (Min)</label>
+            </div>
+
+            <div class="input-field col s12 m6">
+                <input name="tmax" type="number" [(ngModel)]="newConfig.tiempoMax" [class.invalid]="!tMax.valid && !tMax.pristine" class="validate"
+                    #tMax="ngModel" required>
+                <label class="active" for="tMax">Tiempo Maximo (Min)</label>
+            </div>
+
+            <div class="detail mb-small col s12">
+                <div>Precios</div>
+                <div class="grey-text">Valores por cada tiempo minimo hasta el maximo, separados por coma (,)</div>
+            </div>
+            <div class="input-field col s12">
+                <input name="pmin" type="text" [(ngModel)]="prices" [class.invalid]="!pMin.valid && !pMin.pristine" class="validate"
+                    #pMin="ngModel" required>
+                <label class="active" for="pMin">Valores</label>
+            </div>
+
+        </div>
+        <div class="divider"></div>
+        <app-config-sc [config]="newConfig" (scheduleDeleted)="scheduleDelete($event)"></app-config-sc>
+        <div class="row" *ngIf="!loading">
+            <button (click)="edit()" class="btn waves-effect waves-light btn blue col s5 m4 l3" type="submit" [disabled]="!form.valid">Editar</button>
+        </div>
+        <app-loader [center]="true" [size]="small" [show]="loading"></app-loader>
+    </form>
+</div>
+
+<div id="changeAllSchedule" class="modal">
+    <div class="modal-content">
+        <h5>Actualizar Horario</h5>
+        <p class="mb">El cambio realizado desvinculará todos los Auxiliares, ¿ Desea continuar ?</p>
+        <div class="modal-footer">
+            <a (click)="deleteAuxs()" class=" modal-action modal-close waves-effect waves-green btn-flat">Aceptar</a>
+            <a class=" modal-action modal-close waves-effect waves-green btn-flat">Cancelar</a>
+        </div>
+    </div>
+</div>

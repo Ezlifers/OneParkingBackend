@@ -1,0 +1,22 @@
+<div class="row nm nav-avatar white-text valign-wrapper">
+    <div class="col s3 nm">
+        <img class="img-center-crop" src="{{url+user.imagen}}" width="45" height="45" class="circle">
+    </div>
+    <div class="col s9">
+        <h6 class="thin">{{user.nombre}}</h6>
+        <span class="condence">{{user.tipo}}</span>
+    </div>
+</div>
+<ul class="collection nm with-header nav-less">
+    <li class="collection-header grey darken-4">
+        <h6>Administración</h6>
+    </li>
+    <a class="collection-item" *ngFor="let m of nav.menuAdmin" [routerLink]="m.path" routerLinkActive="light-green"><i class="material-icons">{{m.icon}}</i><span>{{m.label}}</span></a>
+</ul>
+<ul class="collection nm with-header grey darken-4 grey-text text-lighten-3 nav-less">
+    <li class="collection-header grey darken-4 ">
+        <h6>Perfil</h6>
+    </li>
+    <a class="collection-item" *ngFor="let m of nav.menuProfile" [routerLink]="m.path" routerLinkActive="light-green"><i class="material-icons">{{m.icon}}</i><span>{{m.label}}</span></a>
+    <a class="collection-item" (click)="logout()"><i class="material-icons">{{nav.logout.icon}}</i><span>{{nav.logout.label}}</span></a>
+</ul>

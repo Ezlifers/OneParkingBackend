@@ -1,0 +1,52 @@
+<b>Basico</b>
+<form #form="ngForm">
+    <div class="row">
+        <div class="input-field col s12 m6">
+            <input name="code" type="number" [(ngModel)]="cod" [class.invalid]="!code.valid && !code.pristine" class="validate" #code="ngModel"
+                min="0" required>
+            <label class="active" for="code">Codigo</label>
+        </div>
+
+        <div class="input-field col s12 m6">
+            <input name="nam" type="text" [(ngModel)]="name" [class.invalid]="!nam.valid && !nam.pristine" class="validate" #nam="ngModel"
+                required>
+            <label class="active" for="nam">Nombre</label>
+        </div>
+
+        <div class="input-field col s12 m6">
+            <input name="direc" type="text" [(ngModel)]="dir" [class.invalid]="!direc.valid && !direc.pristine" class="validate" #direc="ngModel"
+                required>
+            <label class="active" for="direc">Direccion</label>
+        </div>
+
+        <div class="col s12">
+            <sebm-google-map [latitude]="centerLat" [longitude]="centerLon" [zoom]="15" [disableDefaultUI]="true" [zoomControl]="false"
+                (mapClick)="mapClick($event)">
+                <sebm-google-map-marker [latitude]="lat" [longitude]="lon" [label]="'P'" [markerDraggable]="true" (dragEnd)="dragEnd($event)"></sebm-google-map-marker>
+            </sebm-google-map>
+        </div>
+    </div>
+
+    <div class="row" *ngIf="!loading">
+        <button (click)="edit()" class="btn waves-effect waves-light blue col s5 m4 l3" type="submit" [disabled]="!form.valid || loading">Editar</button>
+    </div>
+    <app-loader [size]="small" [show]="loading"></app-loader>
+
+</form>
+
+<b>Bahias</b>
+<form #bayForm="ngForm">
+    <div class="row">
+        <div class="input-field col s12 m6">
+            <input name="nbays" type="number" [(ngModel)]="nBays" min="1" [class.invalid]="!nbays.valid && !nbays.pristine" class="validate"
+                #nbays="ngModel" required>
+            <label class="active" for="nbays">Numero de Bahias</label>
+        </div>
+    </div>
+
+    <div class="row" *ngIf="!loadingBays">
+        <button (click)="editBays()" class="btn waves-effect waves-light blue col s5 m4 l3" type="submit" [disabled]="!bayForm.valid || loadingBays">Editar</button>
+    </div>
+    <app-loader [size]="small" [show]="loadingBays"></app-loader>
+
+</form>

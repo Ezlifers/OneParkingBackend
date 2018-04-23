@@ -1,0 +1,8 @@
+.state{
+  text-align: right;
+}
+.state i,.state p {
+  display: inline-block;
+  vertical-align: middle;
+  font-weight: bold;
+}

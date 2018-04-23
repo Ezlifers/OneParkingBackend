@@ -1,0 +1,36 @@
+<div class="section">
+  <div class="row">
+    <div class="detail col s12 m6 l4">
+      <div>Vehiculos por Usuario</div>
+      <div>{{config.vehiculosUsuario}}</div>
+    </div>
+    <div class="detail col s12 m6 l4">
+      <div>Tiempo maximo de parqueo</div>
+      <div>{{config.tiempoMax|min}}</div>
+    </div>
+    <div class="detail col s12 m6 l4">
+      <div>Tiempo minimo de parqueo</div>
+      <div>{{config.tiempoMin|min}}</div>
+    </div>
+    <div class="detail col s12">
+      <div>Precios</div>
+      <table class="bordered striped">
+        <thead>
+          <tr class="grey-text">
+            <th>Tiempo (min)</th>
+            <th>Valor</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let p of config.precio; index as i">
+            <td> {{ i * (config.tiempoMin / 60) + 1 }} a {{ (i+1) * (config.tiempoMin / 60) }} </td>
+            <td>{{ p | number:'3.0-2' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+<div class="divider"></div>
+<app-config-shedule [times]="config.tiempos" [price]="config.precio"></app-config-shedule>

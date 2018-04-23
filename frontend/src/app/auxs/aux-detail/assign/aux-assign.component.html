@@ -1,0 +1,53 @@
+<div class="section">
+    <h5>Asignar Zona</h5>
+    <div class="row">
+        <input #query type="text" placeholder="Nombre o codigo" class="col s9 m6" (keyup)="keyUp($event, query.value)">
+        <a *ngIf="!loading" class="btn-floating vc" (click)="search(query.value)"><i class="material-icons">search</i></a>
+        <app-loader [size]="small" [show]="loading"></app-loader>
+
+        <p *ngIf="!loading && searched && zones.length == 0" class="col s12 mt">
+            No se encontraron resultados
+        </p>
+        <div class="col s12 mt">
+            <div *ngFor="let z of zones; index as i">
+                <h5>{{z.codigo|zero}} - {{ z.nombre}}</h5>
+                <div *ngFor="let tu of z.tiempos; index as j">
+                    <div *ngIf="tu.horarios.length > 0">
+                        <b>{{tu.tipo}}</b>
+                        <ul class="collection">
+                            <a class="collection-item clickable" *ngFor="let t of tu.horarios; index as k" (click)="assignDialog(z,j,k)">{{t.ti|timeMinute}} a {{t.tf|timeMinute}}<span *ngIf="!t.d" class="right grey-text">No Disponible</span></a>
+                        </ul>
+                    </div>
+                </div>
+                <div class="mt mb"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="assignModal" class="modal">
+    <div class="modal-content">
+        <h5>Asignar</h5>
+        <p class="mb">Asignar el horario {{timeFrom | timeMinute}} a {{timeTo | timeMinute}}, {{timeMsg}}</p>
+        <div *ngIf="day == 0">
+            <input #lu type="checkbox" id="l" [(ngModel)]="days[0]" />
+            <label for="l" class="mr">Lu</label>
+
+            <input #ma type="checkbox" id="m" [(ngModel)]="days[1]"/>
+            <label for="m" class="mr">Ma</label>
+
+            <input #mi type="checkbox" id="mi" [(ngModel)]="days[2]"/>
+            <label for="mi" class="mr">Mi</label>
+
+            <input #ju type="checkbox" id="ju" [(ngModel)]="days[3]" />
+            <label for="ju" class="mr">Ju</label>
+
+            <input #vi type="checkbox" id="vi" [(ngModel)]="days[4]" />
+            <label for="vi" class="mr">Vi</label>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a (click)="assign()" class=" modal-action modal-close waves-effect waves-green btn-flat">Aceptar</a>
+        <a class=" modal-action modal-close waves-effect waves-green btn-flat">Cancelar</a>
+    </div>
+</div>

@@ -1,0 +1,60 @@
+<nav class="transparent z-depth-0">
+    <div class="nav-wrapper">
+        <div>
+            <a routerLink="../" class="breadcrumb dark">Lista de Zonas</a>
+            <a *ngIf="!zone" class="breadcrumb dark">Zona</a>
+            <a *ngIf="zone" class="breadcrumb dark">{{zone.nombre}}</a>
+        </div>
+    </div>
+</nav>
+
+
+<div *ngIf="zone" class="card-panel row">
+    <h4 class="detail-title">{{zone.nombre}} <i class="material-icons right grey-text" (click)="deleteDialog()">delete</i></h4>
+    <div class="col s12 m12 l10">
+        <ul class="tabs main">
+            <li class="tab">
+                <a class="active" href="#detail">
+                    <span class="hide-on-small-only">Detalle</span>
+                    <i class="material-icons hide-on-med-and-up">details</i>
+                </a>
+            </li>
+            <li class="tab">
+                <a href="#settings">
+                    <span class="hide-on-small-only">Configuracion</span>
+                    <i class="material-icons hide-on-med-and-up">settings</i>
+                </a>
+            </li>
+            <li class="tab">
+                <a href="#aux">
+                    <span class="hide-on-small-only">Auxiliares</span>
+                    <i class="material-icons hide-on-med-and-up">person_pin</i>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div id="detail" class="col s12">
+        <app-zone-des [zone]="zone"></app-zone-des>
+        <div class="divider"></div>
+        <app-zone-shedule [times]="zone.tiempos"></app-zone-shedule>
+        <div class="divider"></div>
+        <app-zone-cars [bays]="zone.bahias" [id]="zone._id"></app-zone-cars>
+    </div>
+    <div id="settings" class="col s12">
+        <app-zone-conf [zone]="zone"></app-zone-conf>
+    </div>
+    <div id="aux" class="col s12">
+        <app-zone-auxs [zone]="zone"></app-zone-auxs>
+    </div>
+</div>
+
+<div id="deleteDialog" class="modal">
+    <div class="modal-content">
+        <h5>Eliminar Zona</h5>
+        <p class="mb">Al eliminar la zona se desvincularán los auxiliares, ¿ Desea continuar ?</p>
+        <div class="modal-footer">
+            <a (click)="deleteZone()" class=" modal-action modal-close waves-effect waves-green btn-flat">Aceptar</a>
+            <a class=" modal-action modal-close waves-effect waves-green btn-flat">Cancelar</a>
+        </div>
+    </div>
+</div>

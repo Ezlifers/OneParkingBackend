@@ -1,0 +1,36 @@
+<div class="dashboard grey lighten-5">
+
+    <div class="dashboard-nav grey darken-4 z-depth-2 hide-on-small-only">
+        <nav class="blue darken-3 z-depth-0">
+            <div class="nav-wrapper center-align">
+                <div>
+                    <img class="nav-aside-logo" src="assets/images/logo-min.png" width="40" height="40" />
+                    <h6 class="nav-aside-title">OneParking</h6>
+                </div>
+            </div>
+        </nav>
+        <app-nav></app-nav>
+    </div>
+
+
+    <div class="dashboard-content">
+        <nav class="blue darken-2">
+            <div class="nav-wrapper container-dash">
+                <a href="#" data-activates="mobile-nav" class="button-collapse hide-on-med-and-up"><i class="material-icons">menu</i></a>
+                <span class="brand-logo light">{{nav.title}}</span>
+            </div>
+            <div class="progress nav-loading" *ngIf="nav.loading">
+                <div class="indeterminate"></div>
+            </div>
+            <div class="side-nav grey darken-4" id="mobile-nav">
+                <app-nav></app-nav>
+            </div>
+        </nav>
+
+        <div class="content-main">
+            <div class="container-dash">
+                <router-outlet></router-outlet>
+            </div>
+        </div>
+    </div>
+</div>

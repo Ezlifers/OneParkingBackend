@@ -1,0 +1,10 @@
+<div>{{schedule.ti|timeMinute}} a {{schedule.tf|timeMinute}} <span class="grey-text text-lighten-1" *ngIf="!schedule.d"> - Parqueo prohibido</span>    <i class="right tiny material-icons grey-text vc clickable" (click)="remove()">cancel</i> </div>
+<div class="mt-small">
+    <span class="mr" [class.blue-text]="days[0]" [class.grey-text]="!days[0]">Lu</span>
+    <span class="mr" [class.blue-text]="days[1]" [class.grey-text]="!days[1]">Ma</span>
+    <span class="mr" [class.blue-text]="days[2]" [class.grey-text]="!days[2]">Mi</span>
+    <span class="mr" [class.blue-text]="days[3]" [class.grey-text]="!days[3]">Ju</span>
+    <span class="mr" [class.blue-text]="days[4]" [class.grey-text]="!days[4]">Vi</span>
+    <span class="mr" [class.blue-text]="days[5]" [class.grey-text]="!days[5]">Sa</span>
+    <span class="mr" [class.blue-text]="days[6]" [class.grey-text]="!days[6]">Do</span>
+</div>

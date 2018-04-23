@@ -1,0 +1,30 @@
+<div class="section">
+    <h5 class="detail-title">Horarios y Tarifas <i class="material-icons grey-text right" (click)="goToSettings()">settings</i></h5>
+    <div class="section">
+        <div *ngFor="let tu of times">
+            <b class="blue-text">{{tu.tipo}}</b>
+            <div [ngSwitch]="tu.horarios.length">
+                <div *ngSwitchCase="0">
+                    <p>No especificado</p>
+                </div>
+                <div *ngSwitchDefault>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th data-field="horario">Horario</th>
+                                <th data-field="tarifa">Disponibilidad</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let t of tu.horarios">
+                                <td>{{t.ti|timeMinute}} a {{t.tf|timeMinute}}</td>
+                                <td *ngIf="t.d"><i class="tiny material-icons grey-text vc">done</i></td>
+                                <td *ngIf="!t.d"><i class="tiny material-icons grey-text vc">not_interested</i></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

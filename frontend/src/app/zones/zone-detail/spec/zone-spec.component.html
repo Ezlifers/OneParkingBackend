@@ -1,0 +1,21 @@
+<div class="section">
+    <div class="row">
+        <div class="detail col s12 m6 l4">
+            <div>Codigo</div>
+            <div>{{zone.codigo|zero}}</div>
+        </div>
+        <div class="detail col s12 m6 l4">
+            <div>Direccion</div>
+            <div>{{zone.direccion}}</div>
+        </div>
+        <div class="detail col s12 m6 l4">
+            <div>Bahias</div>
+            <div>{{zone.bahias.length|zero}}</div>
+        </div>
+        <div class="detail col s12">
+            <div>Localización</div>
+            <app-zone-map [width]="600" [height]="300" [lat]="zone.localizacion.coordinates[1]" [lon]="zone.localizacion.coordinates[0]" [responsive]="true"></app-zone-map>
+        </div>
+
+    </div>
+</div>

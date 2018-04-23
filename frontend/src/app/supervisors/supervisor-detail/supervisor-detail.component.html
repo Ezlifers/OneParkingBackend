@@ -1,0 +1,55 @@
+<nav class="transparent z-depth-0">
+    <div class="nav-wrapper">
+        <div>
+            <a routerLink="../" class="breadcrumb dark">Supervisores</a>
+            <a class="breadcrumb dark">{{selected.supervisor.nombre}}</a>
+        </div>
+    </div>
+</nav>
+<div class="card-panel row">
+    <h4 class="detail-title">{{selected.supervisor.nombre}} <i class="material-icons right grey-text" (click)="deleteDialog()">delete</i></h4>
+    <div class="col s12 m12 l10">
+        <ul class="tabs main">
+            <li class="tab">
+                <a class="active" href="#detail">
+                    <span class="hide-on-small-only">Detalle</span>
+                    <i class="material-icons hide-on-med-and-up">details</i>
+                </a>
+            </li>
+            <li class="tab">
+                <a class="active" href="#assign">
+                    <span class="hide-on-small-only">Asignar Auxiliar</span>
+                    <i class="material-icons hide-on-med-and-up">person_pin</i>
+                </a>
+            </li>
+            <li class="tab">
+                <a href="#activity">
+                    <span class="hide-on-small-only">Actividades</span>
+                    <i class="material-icons hide-on-med-and-up">assignment</i>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div id="detail" class="col s12">
+        <app-supervisor-des></app-supervisor-des>
+        <div class="divider"></div>
+        <app-supervisor-auxs></app-supervisor-auxs>
+    </div>
+    <div id="assign" class="col s12">
+        <app-supervisor-assign></app-supervisor-assign>
+    </div>
+    <div id="activity" class="col s12">
+        <app-supervisor-activities></app-supervisor-activities>
+    </div>
+</div>
+
+<div id="deleteDialog" class="modal">
+    <div class="modal-content">
+        <h5>Eliminar Supervisor</h5>
+        <p class="mb">¿ Desea eliminar el supervisor ?</p>
+        <div class="modal-footer">
+            <a (click)="deleteSupervisor()" class=" modal-action modal-close waves-effect waves-green btn-flat">Aceptar</a>
+            <a class=" modal-action modal-close waves-effect waves-green btn-flat">Cancelar</a>
+        </div>
+    </div>
+</div>

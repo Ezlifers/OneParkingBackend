@@ -1,0 +1,7 @@
+<app-loader [center]="true" [size]="small" [show]="loading"></app-loader>
+
+<div *ngIf="!loading">
+    <app-zone-bays [bays]="zone.bahias" [id]="zone._id"></app-zone-bays>
+    <div class="divider"></div>
+    <app-zone-sc [zone]="zone"></app-zone-sc>
+</div>

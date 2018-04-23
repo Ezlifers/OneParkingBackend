@@ -1,0 +1,21 @@
+<div class="section">
+    <h5 class="detail-title">Zonas
+        <div class="right">
+            <i class="material-icons grey-text" (click)="assingZone()">add</i>
+        </div>
+    </h5>
+
+    <div class="section">
+        <div *ngFor="let z of selected.aux.zonas; index as i">
+            <div><b>{{z.codigo|zero}} - {{z.nombre}}</b></div>
+            <ul class="collection">
+                <li class="collection-item" *ngFor="let s of z.horarios; index as j">
+                    <app-aux-zone [zone]="z" [zIndex]="i" [schedule]="s" [sIndex]="j"></app-aux-zone>
+                </li>
+            </ul>
+        </div>
+        <p class="mt mb" *ngIf="selected.aux.zonas.length == 0;">
+            No se han asignado zonas.
+        </p>
+    </div>
+</div>

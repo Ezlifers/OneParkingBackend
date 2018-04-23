@@ -1,0 +1,35 @@
+<div class="section">
+    <h5>Asignar Auxiliar</h5>
+    <div class="row">
+        <input #query type="text" placeholder="Nombre, cedula o celular" class="col s9 m6" (keyup)="keyUp($event, query.value)">
+        <a *ngIf="!loading" class="btn-floating vc" (click)="search(query.value)"><i class="material-icons">search</i></a>
+        <app-loader [size]="small" [show]="loading"></app-loader>
+
+        <p *ngIf="!loading && searched && auxs.length == 0" class="col s12 mt">
+            No se encontraron resultados
+        </p>
+        <div class="col s12 mt">
+            <div class="collection" *ngIf="auxs.length > 0">
+                <a class="collection-item grey-text text-darken-3 clickable" *ngFor="let a of auxs; index as i">
+                    <div class="card-horizontal clickable" (click)="assignDialog(a)">
+                        <img class="mr-small" src="{{service.urlBase+a.imagen}}" />
+                        <div>
+                            <div><b>{{a.nombre}}</b></div>
+                            <div><b>celular</b> {{a.celular}}</div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="assignModal" class="modal">
+    <div class="modal-content">
+        <h5>Asignar</h5>
+        <p class="mb">¿ Desea asignar auxiliar al supervisor ?</p>
+    </div>
+    <div class="modal-footer">
+        <a (click)="assign()" class=" modal-action modal-close waves-effect waves-green btn-flat">Aceptar</a>
+        <a class=" modal-action modal-close waves-effect waves-green btn-flat">Cancelar</a>
+    </div>
+</div>

@@ -1,0 +1,40 @@
+<div class="row nm">
+    <img [class.img-center-crop]="!inZoom" [class.img-zoom]="inZoom" class="materialboxed col s12 l3" height="200" (click)="zoom()"
+        src="{{service.urlBase+incident.foto}}">
+    <div class="col s12 l9">
+        <h6>
+            <b>{{incident.zona.nombre}} ({{incident.zona.codigo}})</b>
+            <span *ngIf="!incident.atendida" class="right orange-text text-lighten-1">
+                <i class="tiny material-icons mr-small">error_outline</i> <span class="hide-on-small-only">No Atendido</span>
+            </span>
+            <span *ngIf="incident.atendida" class="right green-text text-lighten-1">
+                <i class="tiny material-icons mr-small">done</i> <span class="hide-on-small-only"> Atendida </span>
+            </span>
+        </h6>
+        <div>{{dateNotify| date: "medium"}}</div>
+
+        <p *ngIf="incident.atendida">
+            <b> Atendida: </b> {{dateAttend | date:"medium"}}
+        </p>
+
+        <p>
+            <b> Bahia: </b> {{incident.zona.bahia}}
+            <br>
+            <b> Placa: </b> {{incident.placa}}
+        </p>
+
+        <p>
+            <b> Notifico: </b> {{incident.usuario.nombre}} ({{incident.usuario.tipo}})
+            <br>
+            <b> Celular: </b> {{incident.usuario.celular}}
+        </p>
+
+        <p>{{incident.observaciones}}</p>
+
+        <div *ngIf="!incident.atendida && !loading" class="row">
+            <a class="waves-effect waves-dark teal-text btn-flat center center-h col s12 m4 l2 offset-l10 offset-m8" (click)="attend()">Atender</a>
+        </div>
+        <app-loader [center]="true" [size]="small" [show]="loading"></app-loader>
+
+    </div>
+</div>

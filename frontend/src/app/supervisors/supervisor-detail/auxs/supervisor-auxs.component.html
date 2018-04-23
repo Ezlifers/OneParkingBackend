@@ -1,0 +1,25 @@
+<div class="section">
+    <h5 class="detail-title">Auxiliares
+        <div class="right">
+            <i class="material-icons grey-text" (click)="assingAux()">add</i>
+        </div>
+    </h5>
+
+    <div class="section">
+        <ul class="collection" *ngIf="selected.supervisor.auxiliares.length > 0; else none">
+            <li class="collection-item" *ngFor="let a of selected.supervisor.auxiliares; index as i">
+                <i class="right tiny material-icons grey-text vc clickable" (click)="remove(a.id,i)">cancel</i>
+                <div class="card-horizontal">
+                    <img class="mr-small" src="{{service.urlBase+a.imagen}}" />
+                    <div>
+                        <div><b>{{a.nombre}}</b></div>
+                        <div><b>celular</b> {{a.celular}}</div>
+                    </div>
+                </div>
+            </li>
+        </ul>
+        <ng-template #none>
+            <p class="mt mb"> No se han asignado auxiliares.</p>
+        </ng-template>
+    </div>
+</div>
