@@ -42,7 +42,7 @@
     "@types/jsonwebtoken": "^7.2.0",
     "@types/marked": "^0.0.28",
     "@types/mocha": "^2.2.40",
-    "@types/mongodb": "^3.0.15",
+    "@types/mongodb": "^2.2.14",
     "@types/morgan": "^1.7.32",
     "@types/node": "^7.0.10",
     "@types/power-assert": "^1.4.29",
