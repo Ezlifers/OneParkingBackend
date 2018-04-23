@@ -1,13 +1,18 @@
 {
-  "name": "node-express-typescript",
-  "description": "node-express-typescript Sample Application (TypeScript)",
+  "name": "oneparking",
+  "description": "OneParking Application",
   "version": "0.0.0",
   "private": true,
   "scripts": {
     "start": "node ./out/www.js",
     "test": "mocha ./tests/out/test.js",
     "compile": "node ./node_modules/typescript/bin/tsc -p ./src",
-    "compiletests": "node ./node_modules/typescript/bin/tsc -p ./tests"
+    "compiletests": "node ./node_modules/typescript/bin/tsc -p ./tests",
+    "postinstall": "cd frontend/ && npm install --unsafe-perm",
+    "buildWithFront": "cd frontend/ && npm run build && cd .. && gulp buildAll",
+    "build": "gulp buildAll",
+    "buildProduction": "cd frontend/ && npm run build && cd .. && gulp buildAllProd",
+    "buildandrun": "gulp buildAll && npm start"
   },
   "dependencies": {
     "body-parser": "~1.13.2",
@@ -37,7 +42,7 @@
     "@types/jsonwebtoken": "^7.2.0",
     "@types/marked": "^0.0.28",
     "@types/mocha": "^2.2.40",
-    "@types/mongodb": "^2.1.43",
+    "@types/mongodb": "^3.0.15",
     "@types/morgan": "^1.7.32",
     "@types/node": "^7.0.10",
     "@types/power-assert": "^1.4.29",

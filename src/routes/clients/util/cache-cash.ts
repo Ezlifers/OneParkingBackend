@@ -1,6 +1,6 @@
 import { USERS } from '../../users/api';
 import { RedisClient } from 'redis';
-import { ObjectID } from "@types/mongodb";
+import { ObjectID } from "mongodb";
 
 export class SavedCash{
     cash:number;

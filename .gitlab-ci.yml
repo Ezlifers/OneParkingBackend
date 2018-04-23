@@ -1,0 +1,31 @@
+stages: 
+  - build
+  - deploy 
+
+cache:
+  untracked: true
+  paths:
+  - node-modules/
+  - out/
+
+prepare:
+  stage: build
+  script: 
+    - npm install --unsafe-perm
+    - mkdir -p /home/public/
+    - mkdir -p /home/public/imgsrc/
+    - mkdir -p /home/public/images/
+    - mkdir -p /home/public/images/usuarios/
+    - mkdir -p /home/public/images/incidencias/
+    - npm run buildProduction
+  tags:
+    - main
+
+start:
+  stage: deploy
+  script:
+    - pm2 kill
+    - pm2 start ecosystem.config.js --env production
+  tags:
+    - main
+ 
