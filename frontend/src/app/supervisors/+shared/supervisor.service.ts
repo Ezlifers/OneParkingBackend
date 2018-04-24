@@ -4,7 +4,7 @@ import { Http, Response } from '@angular/http';
 import { SessionService } from '../../+core/_index';
 import { HttpClientService } from '../../+shared/_index';
 import { Supervisor, AuxSupervisor } from './supervisor.model';
-import { Aux } from '../../Auxs/+shared/_index';
+import { Aux } from '../../auxs/+shared/_index';
 
 @Injectable()
 export class SupervisorService extends HttpClientService {
