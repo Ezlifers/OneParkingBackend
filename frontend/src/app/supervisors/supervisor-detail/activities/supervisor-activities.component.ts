@@ -14,7 +14,7 @@ export class SupervisorActivitiesComponent implements OnInit {
 
     dateIni: string;
 
-    constructor(private service: SupervisorService, private selected: SupervisorSelectedService) { }
+    constructor(private service: SupervisorService, public selected: SupervisorSelectedService) { }
 
     ngOnInit() {
         const date = new Date();

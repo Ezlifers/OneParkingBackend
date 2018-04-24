@@ -14,7 +14,7 @@ export class AuxActivitiesComponent implements OnInit {
 
     dateIni: string;
 
-    constructor(private service: AuxService, private selected: AuxSelectedService) { }
+    constructor(private service: AuxService, public selected: AuxSelectedService) { }
 
     ngOnInit() {
         const date = new Date();

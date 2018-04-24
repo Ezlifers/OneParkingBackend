@@ -7,6 +7,6 @@ import { Aux, AuxService, AuxSelectedService } from '../../+shared/_index';
 })
 export class AuxSpecComponent {
 
-    constructor(private service: AuxService, private selected: AuxSelectedService) { }
+    constructor(public service: AuxService, public selected: AuxSelectedService) { }
 
 }

@@ -36,7 +36,7 @@
                     <pre> </pre>
                 </div>
                 <a *ngIf="!loading" class="btn-floating" (click)="search()"><i class="material-icons">search</i></a>
-                <app-loader [size]="small" [center]="true" [show]="loading"></app-loader>
+                <app-loader [size]="'small'" [center]="true" [show]="loading"></app-loader>
             </div>
             <p class="grey-text text-lighten-1">No especificar <strong>Hasta</strong> para realizar la busqueda en un solo dia</p>
         </div>

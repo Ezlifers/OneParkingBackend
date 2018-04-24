@@ -12,7 +12,7 @@ export class SupervisorAuxsComponent {
 
     index: number;
 
-    constructor(private selected: SupervisorSelectedService, private service: SupervisorService) { }
+    constructor(public selected: SupervisorSelectedService, private service: SupervisorService) { }
 
     assingAux() {
         $('ul.tabs').tabs('select_tab', 'assign');

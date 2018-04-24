@@ -34,7 +34,7 @@
         <div class="row" *ngIf="!loading">
             <button (click)="edit()" class="btn waves-effect waves-light btn blue col s5 m4 l3" type="submit" [disabled]="!form.valid">Editar</button>
         </div>
-        <app-loader [size]="small" [center]="true" [show]="loading"></app-loader>
+        <app-loader [size]="'small'" [center]="true" [show]="loading"></app-loader>
     </form>
 
     <div class="divider"></div>
@@ -50,6 +50,6 @@
         <div class="row" *ngIf="!loadingPass">
             <button (click)="resetPass()" class="btn waves-effect waves-light btn blue col s5 m4 l3" type="submit" [disabled]="!passForm.valid">Reiniciar Password</button>
         </div>
-        <app-loader [size]="small" [center]="true" [show]="loadingPass"></app-loader>        
+        <app-loader [size]="'small'" [center]="true" [show]="loadingPass"></app-loader>        
     </form>
 </div>

@@ -10,7 +10,7 @@ declare var Materialize: any;
 })
 export class AuxZonesComponent {
 
-    constructor(private selected: AuxSelectedService) { }
+    constructor(public selected: AuxSelectedService) { }
 
     assingZone() {
         $('ul.tabs').tabs('select_tab', 'assign');

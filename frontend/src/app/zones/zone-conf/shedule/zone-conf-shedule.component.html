@@ -106,7 +106,7 @@
       </div>
     </div>
     <div class="modal-footer">
-      <a *ngIf="!addDis || addForm.valid" (click)="addTime()" class=" modal-action modal-close waves-effect waves-green btn-flat">Aceptar</a>
+      <a *ngIf="addForm.valid" (click)="addTime()" class=" modal-action modal-close waves-effect waves-green btn-flat">Aceptar</a>
       <a class=" modal-action modal-close waves-effect waves-green btn-flat">Cancelar</a>
     </div>
   </form>
@@ -123,7 +123,7 @@
   </div>
 </div>
 
-<div id="changeSchedule" class="modal">
+<!-- <div id="changeSchedule" class="modal">
   <div class="modal-content">
     <h5>Actualizar Horario</h5>
     <p class="mb">Se desvincularán los Auxiliares asignados a los horarios eliminados, ¿ Desea continuar ?</p>
@@ -132,4 +132,4 @@
       <a class=" modal-action modal-close waves-effect waves-green btn-flat">Cancelar</a>
     </div>
   </div>
-</div>
+</div> -->

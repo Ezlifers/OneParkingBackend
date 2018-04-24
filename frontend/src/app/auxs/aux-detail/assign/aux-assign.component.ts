@@ -24,7 +24,7 @@ export class AuxAssignComponent implements OnInit {
     timeTo: number;
     timeMsg: string;
 
-    constructor(private service: AuxService, private selected: AuxSelectedService) {
+    constructor(private service: AuxService, public selected: AuxSelectedService) {
         this.searched = false;
         this.loading = false;
         this.zones = [];

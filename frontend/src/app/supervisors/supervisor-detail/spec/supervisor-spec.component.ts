@@ -7,6 +7,6 @@ import { Supervisor, SupervisorService, SupervisorSelectedService } from '../../
 })
 export class SupervisorSpecComponent {
 
-    constructor(private service: SupervisorService, private selected: SupervisorSelectedService) { }
+    constructor(public service: SupervisorService, public selected: SupervisorSelectedService) { }
 
 }

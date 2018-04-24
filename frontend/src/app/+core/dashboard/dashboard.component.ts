@@ -9,7 +9,7 @@ declare var $: any;
 })
 export class DashboardComponent implements OnInit {
 
-    constructor(private nav: NavigationService) {
+    constructor(public nav: NavigationService) {
 
     }
 

@@ -30,7 +30,7 @@
     <div class="row" *ngIf="!loading">
         <button (click)="edit()" class="btn waves-effect waves-light blue col s5 m4 l3" type="submit" [disabled]="!form.valid || loading">Editar</button>
     </div>
-    <app-loader [size]="small" [show]="loading"></app-loader>
+    <app-loader [size]="'small'" [show]="loading"></app-loader>
 
 </form>
 
@@ -47,6 +47,6 @@
     <div class="row" *ngIf="!loadingBays">
         <button (click)="editBays()" class="btn waves-effect waves-light blue col s5 m4 l3" type="submit" [disabled]="!bayForm.valid || loadingBays">Editar</button>
     </div>
-    <app-loader [size]="small" [show]="loadingBays"></app-loader>
+    <app-loader [size]="'small'" [show]="loadingBays"></app-loader>
 
 </form>

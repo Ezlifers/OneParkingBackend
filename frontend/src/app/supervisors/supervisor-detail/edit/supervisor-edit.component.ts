@@ -22,7 +22,7 @@ export class SupervisorEditComponent implements OnInit {
     image: File = null;
     reader: FileReader;
 
-    constructor(private service: SupervisorService, private selected: SupervisorSelectedService) {
+    constructor(private service: SupervisorService, public selected: SupervisorSelectedService) {
         this.reader = new FileReader();
         this.reader.onload = this.loadedImg(this);
     }

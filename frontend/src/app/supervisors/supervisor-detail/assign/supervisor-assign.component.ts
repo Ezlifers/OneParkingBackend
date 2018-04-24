@@ -18,7 +18,7 @@ export class SupervisorAssignComponent implements OnInit {
 
     aux: Aux;
 
-    constructor(private service: SupervisorService, private selected: SupervisorSelectedService) {
+    constructor(private service: SupervisorService, public selected: SupervisorSelectedService) {
         this.searched = false;
         this.loading = false;
         this.auxs = [];

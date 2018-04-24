@@ -16,7 +16,7 @@ export class AuxZoneComponent implements OnInit {
 
     days: boolean[];
 
-    constructor(private selected: AuxSelectedService, private service: AuxService) {
+    constructor(public selected: AuxSelectedService, private service: AuxService) {
         this.days = [false, false, false, false, false, false, false];
     }
 

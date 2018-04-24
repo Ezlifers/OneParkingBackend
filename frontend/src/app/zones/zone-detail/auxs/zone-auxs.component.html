@@ -1,7 +1,7 @@
 <div class="section">
     <h5 class="mb">Auxiliares <i class="material-icons grey-text right clickable" (click)="removeDialog()">clear_all</i></h5>
 
-    <app-loader [size]="small" [show]="!service.auxs" [center]="true"></app-loader>
+    <app-loader [size]="'small'" [show]="!service.auxs" [center]="true"></app-loader>
 
     <div *ngIf="service.auxs && service.auxs.length == 0">Auxiliares no asignados</div>
 

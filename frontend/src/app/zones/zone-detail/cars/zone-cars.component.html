@@ -6,7 +6,7 @@
     </h5>
     <div class="section">
 
-      <app-loader [size]="small" [center]="true" [show]="loading"></app-loader>
+      <app-loader [size]="'small'" [center]="true" [show]="loading"></app-loader>
 
       <ul class="collection" *ngIf="cars.length > 0 && !loading">
           <li class="collection-item" *ngFor="let c of cars;index as i">

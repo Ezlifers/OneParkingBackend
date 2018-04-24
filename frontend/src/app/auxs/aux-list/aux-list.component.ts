@@ -17,7 +17,7 @@ export class AuxListComponent implements AfterViewInit {
     , private route: ActivatedRoute
     , private nav: NavigationService
     , private service: AuxService
-    , private selected: AuxSelectedService) { }
+    , public selected: AuxSelectedService) { }
 
   ngAfterViewInit() {
     this.nav.loading = true;

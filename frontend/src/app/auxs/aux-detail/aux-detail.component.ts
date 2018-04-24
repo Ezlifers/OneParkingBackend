@@ -14,7 +14,7 @@ export class AuxDetailComponent implements OnInit {
 
     constructor(private router: Router
         , private route: ActivatedRoute
-        , private selected: AuxSelectedService
+        , public selected: AuxSelectedService
         , private service: AuxService) { }
 
     ngOnInit() {

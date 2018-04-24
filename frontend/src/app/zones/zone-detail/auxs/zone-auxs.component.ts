@@ -14,7 +14,7 @@ export class ZoneAuxsComponent implements OnInit {
 
     @Input() zone: Zone;
 
-    constructor(private service: ZoneService) { }
+    constructor(public service: ZoneService) { }
 
     ngOnInit() {
         $('.modal').modal();

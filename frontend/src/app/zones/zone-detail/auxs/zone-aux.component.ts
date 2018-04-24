@@ -20,7 +20,7 @@ export class ZoneAuxComponent implements OnInit {
 
     days: boolean[];
 
-    constructor(private service: AuxService) {
+    constructor(public service: AuxService) {
         this.days = [false, false, false, false, false, false, false];
     }
 

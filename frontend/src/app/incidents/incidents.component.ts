@@ -19,7 +19,7 @@ export class IncidentsComponent implements OnInit {
     loading: boolean;
     searched: boolean;
 
-    constructor(private service: IncidentService, public nav: NavigationService) {
+    constructor(public service: IncidentService, public nav: NavigationService) {
         this.nav.title = 'Incidencias';
         this.findToday = true;
         this.loading = false;

@@ -9,7 +9,7 @@ import { ProfileService } from '../+shared/profile.service';
 })
 export class ProfileSpecComponent {
     user: User;
-    constructor(private session: SessionService, private service: ProfileService) {
+    constructor(private session: SessionService, public service: ProfileService) {
         this.user = session.user;
     }
 }

@@ -23,7 +23,7 @@ export class AuxEditComponent implements OnInit {
     image: File = null;
     reader: FileReader;
 
-    constructor(private service: AuxService, private selected: AuxSelectedService) {
+    constructor(private service: AuxService, public selected: AuxSelectedService) {
         this.reader = new FileReader();
         this.reader.onload = this.loadedImg(this);
     }

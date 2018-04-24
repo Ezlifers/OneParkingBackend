@@ -16,7 +16,7 @@ export class SupervisorListComponent implements AfterViewInit {
         , private route: ActivatedRoute
         , private nav: NavigationService
         , private service: SupervisorService
-        , private selected: SupervisorSelectedService) { }
+        , public selected: SupervisorSelectedService) { }
 
     ngAfterViewInit() {
         this.nav.loading = true;

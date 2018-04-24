@@ -3,7 +3,7 @@
     <div class="row">
         <input #query type="text" placeholder="Nombre, cedula o celular" class="col s9 m6" (keyup)="keyUp($event, query.value)">
         <a *ngIf="!loading" class="btn-floating vc" (click)="search(query.value)"><i class="material-icons">search</i></a>
-        <app-loader [size]="small" [show]="loading"></app-loader>
+        <app-loader [size]="'small'" [show]="loading"></app-loader>
 
         <p *ngIf="!loading && searched && auxs.length == 0" class="col s12 mt">
             No se encontraron resultados

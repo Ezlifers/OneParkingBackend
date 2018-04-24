@@ -15,7 +15,7 @@ export class NavAsideComponent {
     url: string;
     user: User;
 
-    constructor(private router: Router, private session: SessionService, private nav: NavAsideService) {
+    constructor(private router: Router, private session: SessionService, public nav: NavAsideService) {
         this.url = URL_BASE;
         this.user = session.user;
     }

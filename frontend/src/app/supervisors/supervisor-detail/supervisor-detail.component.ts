@@ -14,7 +14,7 @@ export class SupervisorDetailComponent implements OnInit {
 
     constructor(private router: Router
     , private route: ActivatedRoute
-    , private selected: SupervisorSelectedService
+    , public selected: SupervisorSelectedService
     , private service: SupervisorService
     ) { }
 
