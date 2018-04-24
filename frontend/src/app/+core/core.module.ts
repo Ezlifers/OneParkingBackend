@@ -24,8 +24,4 @@ import { NavigationService } from './navigation.service';
     ],
     providers: [SessionService, NavigationService]
 })
-
-@NgModule({
-
-})
 export class CoreModule { }

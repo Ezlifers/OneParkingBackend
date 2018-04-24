@@ -6,7 +6,7 @@ declare var $: any;
 declare var Materialize: any;
 
 @Component({
-    templateUrl: '/incidents.component.html'
+    templateUrl: './incidents.component.html'
 })
 export class IncidentsComponent implements OnInit {
 
