@@ -21,7 +21,7 @@ export class IncidentComponent implements OnInit {
 
     loading: boolean;
 
-    constructor(private service: IncidentService) { }
+    constructor(public service: IncidentService) { }
 
     ngOnInit() {
         $('.materialboxed').materialbox();
