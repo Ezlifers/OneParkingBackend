@@ -28,6 +28,7 @@ import config from './routes/config/api'
 
 const app: express.Express = express();
 var mdb;
+
 let clientRedis = createClient();
 
 
