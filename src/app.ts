@@ -26,6 +26,9 @@ import reserves from './routes/reserves/api'
 import transactions from './routes/transactions/api'
 import config from './routes/config/api'
 
+const env = process.env.NODE_ENV || 'development';
+const publicDir = env == 'development' || env == 'local' ? __dirname : '/home';
+
 const app: express.Express = express();
 var mdb;
 
@@ -110,8 +113,8 @@ app.use(logger('dev'));
 app.use(bodyParser.json({ limit: '5mb' }));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use('/public', express.static(__dirname + '/public'));
-app.use(express.static(path.join(__dirname, 'public')));
+app.use('/public', express.static(publicDir + '/public'));
+app.use(express.static(path.join(publicDir, 'public')));
 
 app.use((req: any, res, next) => {
   req.db = mdb;
