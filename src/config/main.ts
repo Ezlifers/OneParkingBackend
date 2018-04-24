@@ -21,7 +21,7 @@ export const CONFIG = {
 
 //TODO: Cambiar el nombre del usuairo inicial
 export const INITIAL_USER = new Sttm({
-    nombre: "Dario Chamorro"
+    nombre: "Dario Fernando Chamorro"
     , cedula: "1085277896"
     , imagen: IMG_USER_DEFAULT
     , celular: "3017790935"
