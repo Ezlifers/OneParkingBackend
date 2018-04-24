@@ -2,7 +2,8 @@ import { IMG_USER_PATH, IMG_USER_DEFAULT, IMG_INCIDENT_PATH } from '../config/co
 export { IMG_USER_NAME_DEFAULT } from '../config/constants'
 import * as fs from 'fs'
 
-const LOCAL = 'out';
+const env = process.env.NODE_ENV || 'development'
+const publicDir = env == 'development' || env == 'local'? 'out' : '/home';
 
 export function saveUserImage(image: string, success: (path: string) => void, undefinedImage: (defaultImg: string) => void, fail: () => void) {
     if (image == null) {
@@ -21,7 +22,7 @@ function saveImage(imageBase64: string, rootPath: string, ext: string, success: 
     let img = new Buffer(imageBase64, "base64");
     let name: string = `${Date.now()}.${ext}`;
     let path: string = rootPath + name;
-    let filePath: string = LOCAL + path;
+    let filePath: string = publicDir + path;
 
     fs.writeFile(filePath, img, (err) => {
         if (err) {
@@ -34,12 +35,12 @@ function saveImage(imageBase64: string, rootPath: string, ext: string, success: 
 }
 
 export function deleteUserImage(name: string) {
-    const path = `${LOCAL}${IMG_USER_PATH}${name}`;
-    deleteImg(`${LOCAL}${IMG_USER_PATH}${name}`)
+    const path = `${publicDir}${IMG_USER_PATH}${name}`;
+    deleteImg(`${publicDir}${IMG_USER_PATH}${name}`)
 }
 
 export function deleteIncidentImage(name: string) {
-    deleteImg(`${LOCAL}${IMG_INCIDENT_PATH}${name}`)
+    deleteImg(`${publicDir}${IMG_INCIDENT_PATH}${name}`)
 }
 
 function deleteImg(path: string) {
