@@ -1,0 +1,60 @@
+<div class="section">
+    <b>Basico</b>
+    <form #form="ngForm">
+        <div class="row">
+            <div class="input-field col s12 m6">
+                <input name="ced" type="number" [(ngModel)]="document" [class.invalid]="!ced.valid && !ced.pristine" class="validate" #ced="ngModel"
+                    required>
+                <label class="active" for="ced">Cedula</label>
+            </div>
+            <div class="input-field col s12 m6">
+                <input name="nom" type="text" [(ngModel)]="name" [class.invalid]="!nom.valid && !nom.pristine" class="validate" #nom="ngModel"
+                    required>
+                <label class="active" for="nom">Nombre</label>
+            </div>
+
+            <div class="input-field col s12 m6">
+                <input name="cel" type="text" [(ngModel)]="celNumber" [class.invalid]="!cel.valid && !cel.pristine" class="validate" #cel="ngModel"
+                    required>
+                <label class="active" for="cel">Celular Asignado</label>
+            </div>
+
+            <div class="input-field col s12 m6">
+                <input name="device" type="text" [(ngModel)]="device" [class.invalid]="!dis.valid && !dis.pristine" class="validate" #dis="ngModel">
+                <label class="active" for="dis">Dispositivo Asignado</label>
+            </div>
+
+            <div class="file-field input-field col s12">
+                <div class="btn">
+                    <span>Imagen</span>
+                    <input type="file" accept=".jpg" (change)="fileSelected($event)">
+                </div>
+                <div class="file-path-wrapper">
+                    <input class="file-path validate" type="text" placeholder="Cambiar de imagen">
+                </div>
+            </div>
+
+
+        </div>
+        <div class="row" *ngIf="!loading">
+            <button (click)="edit()" class="btn waves-effect waves-light btn blue col s5 m4 l3" type="submit" [disabled]="!form.valid">Editar</button>
+        </div>
+        <app-loader [size]="small" [center]="true" [show]="loading"></app-loader>
+    </form>
+
+    <div class="divider"></div>
+    <b>Contraseña</b>
+    <form #passForm="ngForm" class="col s12">
+        <div class="row">
+            <div class="input-field col s12 m6">
+                <input name="pass" type="text" [(ngModel)]="tempPass" [class.invalid]="!pass.valid && !pass.pristine" class="validate" #pass="ngModel"
+                    required>
+                <label for="pass">Contraseña Temporal</label>
+            </div>
+        </div>
+        <div class="row" *ngIf="!loadingPass">
+            <button (click)="resetPass()" class="btn waves-effect waves-light btn blue col s5 m4 l3" type="submit" [disabled]="!passForm.valid">Reiniciar Password</button>
+        </div>
+        <app-loader [size]="small" [center]="true" [show]="loadingPass"></app-loader>        
+    </form>
+</div>

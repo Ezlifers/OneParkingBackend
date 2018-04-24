@@ -1,0 +1,20 @@
+<div class="bahia">
+
+
+    <div>
+        <span class="cod">COD {{index + 1}} </span>
+        <div class="right">
+            <div class="switch">
+                <label>
+
+            <input #disC type="checkbox" *ngIf="disIni" checked (change)="changeDis(disC.checked)">
+            <input #disU type="checkbox" *ngIf="!disIni" (change)="changeDis(disU.checked)">
+            <span class="material-icons lever"></span>
+            <i class="material-icons vc">accessible</i>
+          </label>
+            </div>
+
+        </div>
+    </div>
+
+</div>

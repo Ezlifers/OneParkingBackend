@@ -1,0 +1,55 @@
+<nav class="transparent z-depth-0">
+  <div class="nav-wrapper">
+    <div>
+      <a routerLink="../" class="breadcrumb dark">Auxiliares</a>
+      <a class="breadcrumb dark">{{selected.aux.nombre}}</a>
+    </div>
+  </div>
+</nav>
+<div class="card-panel row">
+  <h4 class="detail-title">{{selected.aux.nombre}} <i class="material-icons right grey-text" (click)="deleteDialog()">delete</i></h4>
+  <div class="col s12 m12 l10">
+    <ul class="tabs main">
+      <li class="tab">
+        <a class="active" href="#detail">
+          <span class="hide-on-small-only">Detalle</span>
+          <i class="material-icons hide-on-med-and-up">details</i>
+        </a>
+      </li>
+      <li class="tab">
+        <a class="active" href="#assign">
+          <span class="hide-on-small-only">Asignar Zona</span>
+          <i class="material-icons hide-on-med-and-up">room</i>
+        </a>
+      </li>
+      <li class="tab">
+        <a href="#activity">
+          <span class="hide-on-small-only">Actividades</span>
+          <i class="material-icons hide-on-med-and-up">assignment</i>
+        </a>
+      </li>
+    </ul>
+  </div>
+  <div id="detail" class="col s12">
+    <app-aux-des></app-aux-des>
+    <div class="divider"></div>
+    <app-aux-zones></app-aux-zones>
+  </div>
+  <div id="assign" class="col s12">
+    <app-aux-assign></app-aux-assign>
+  </div>
+  <div id="activity" class="col s12">
+    <app-aux-activities></app-aux-activities>
+  </div>
+</div>
+
+<div id="deleteDialog" class="modal">
+    <div class="modal-content">
+        <h5>Eliminar Auxiliar</h5>
+        <p class="mb">¿ Desea eliminar el auxiliar ?</p>
+        <div class="modal-footer">
+            <a (click)="deleteAux()" class=" modal-action modal-close waves-effect waves-green btn-flat">Aceptar</a>
+            <a class=" modal-action modal-close waves-effect waves-green btn-flat">Cancelar</a>
+        </div>
+    </div>
+</div>

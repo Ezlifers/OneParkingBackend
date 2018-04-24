@@ -35,6 +35,7 @@ MongoClient.connect(CONFIG.database).then((db) => {
   console.log("Conexion a mongo exitosa");
   mdb = db
   //CONFIGURACION 
+  
   db.collection("configuracion").findOne({}).then((result) => {
     let version = 0;
     if (result == null) {

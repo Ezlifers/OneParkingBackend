@@ -1,0 +1,135 @@
+<div class="section">
+  <h5 class="detail-title mb">Horarios
+    <i class="right material-icons grey-text" (click)="restore()">settings_backup_restore</i>
+  </h5>
+  <div class="switch">
+    <label>
+      <input #dC type="checkbox" checked *ngIf="dTimesIni" (change)="change(dC.checked)">
+      <input #dN type="checkbox" *ngIf="!dTimesIni" (change)="change(dN.checked)">
+      <span class="lever"></span>
+      Configuración por defecto
+    </label>
+  </div>
+
+  <div class="section mt" *ngIf="dTimes">
+    <div *ngFor="let tu of times">
+      <b class="blue-text">{{tu.tipo}}</b>
+      <div [ngSwitch]="tu.horarios.length">
+        <div *ngSwitchCase="0">
+          <p>No especificado</p>
+        </div>
+        <div *ngSwitchDefault>
+          <table>
+            <thead>
+              <tr>
+                <th data-field="horario">Horario</th>
+                <th data-field="disponibilidad">Disponibilidad</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let t of tu.horarios">
+                <td *ngIf="t.d">{{t.ti|timeMinute}} a {{t.tf|timeMinute}}</td>
+                <td *ngIf="t.d"><i class="tiny material-icons grey-text vc">done</i></td>
+                <td *ngIf="!t.d"><i class="tiny material-icons grey-text vc">not_interested</i></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Uso personalizado -->
+
+  <div class="section mt" *ngIf="!dTimes">
+    <div *ngFor="let tu of times; index as i">
+      <b class="blue-text">{{tu.tipo}}</b>
+      <i class="tiny material-icons grey-text vc clickable" (click)="showDialog(tu.tipo,i)">add_circle</i>
+      <div [ngSwitch]="tu.horarios.length">
+        <div *ngSwitchCase="0">
+          <p>No especificado</p>
+        </div>
+        <div *ngSwitchDefault>
+          <table>
+            <thead>
+              <tr>
+                <th data-field="horario">Horario</th>
+                <th data-field="disponibilidad">Disponibilidad</th>
+                <th data-field="disSwitch"></th>
+                <th data-field="eliminar"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let t of tu.horarios;index as j">
+                <td>{{t.ti|timeMinute}} a {{t.tf|timeMinute}}</td>
+                <td *ngIf="t.d">Disponible</td>
+                <td *ngIf="!t.d">Prohibido</td>
+                <td>
+                  <div class="switch">
+                    <label>
+                      <input #d type="checkbox" [checked]="t.d" (change)="changeAvailability(i,j,d.checked)">
+                      <span class="lever"></span>
+                    </label>
+                  </div>
+                </td>
+                <td>
+                  <i class="tiny material-icons grey-text vc clickable" (click)="removeTime(i,j)">cancel</i>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <a class="waves-effect waves-light btn col s12 m8 l3" (click)="save()">Guardar</a>
+  </div>
+
+</div>
+
+<div id="addDialog" class="modal">
+  <form #addForm="ngForm">
+    <div class="modal-content">
+      <h5>Agregar Horario</h5>
+      <h6>{{titleDialog}}</h6>
+      <div class="row mt">
+        <div class="input-field col s12 m6">
+          <input name="desde" type="time" class="validate" [(ngModel)]="addTi" #ti required>
+          <label class="active" for="ti">Desde</label>
+        </div>
+        <div class="input-field col s12 m6">
+          <input name="hasta" type="time" class="validate" [(ngModel)]="addTf" #tf required>
+          <label class="active" for="tf">Hasta</label>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <a *ngIf="!addDis || addForm.valid" (click)="addTime()" class=" modal-action modal-close waves-effect waves-green btn-flat">Aceptar</a>
+      <a class=" modal-action modal-close waves-effect waves-green btn-flat">Cancelar</a>
+    </div>
+  </form>
+</div>
+
+<div id="changeAllSchedule" class="modal">
+  <div class="modal-content">
+    <h5>Actualizar Horario</h5>
+    <p class="mb">El cambio realizado desvinculará todos los Auxiliares asignados a esta Zona, ¿ Desea continuar ?</p>
+    <div class="modal-footer">
+      <a (click)="deleteAuxs()" class=" modal-action modal-close waves-effect waves-green btn-flat">Aceptar</a>
+      <a class=" modal-action modal-close waves-effect waves-green btn-flat">Cancelar</a>
+    </div>
+  </div>
+</div>
+
+<div id="changeSchedule" class="modal">
+  <div class="modal-content">
+    <h5>Actualizar Horario</h5>
+    <p class="mb">Se desvincularán los Auxiliares asignados a los horarios eliminados, ¿ Desea continuar ?</p>
+    <div class="modal-footer">
+      <a (click)="deleteShedule()" class=" modal-action modal-close waves-effect waves-green btn-flat">Aceptar</a>
+      <a class=" modal-action modal-close waves-effect waves-green btn-flat">Cancelar</a>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,55 @@
+<div class="card-panel row">
+    <div class="section">
+        <h4 class="detail-title">Incidencias
+            <div class="right">
+                <i class="material-icons grey-text" (click)="refresh()">refresh</i>
+            </div>
+        </h4>
+        <div class="card-horizontal">
+
+            <div class="switch">
+                <label>
+                    <input #today type="checkbox" checked (change)="changeToday(today.checked)">
+                    <span class="lever"></span>
+                    Solo Hoy
+                </label>
+            </div>
+
+            <div class="switch">
+                <label>
+                    <input #attend type="checkbox"  (change)="changeAttend(attend.checked)">
+                    <span class="lever"></span>
+                    Todo
+                </label>
+            </div>
+
+        </div>
+        <br>
+        <div *ngIf="!findToday">
+            <div class="row nm">
+                <input #todayDate type="date" class="datepicker col s10 m4 l2" placeholder="Desde" [(ngModel)]="dateFrom" (keyup)="keyUp($event)">
+                <div class="col m1 hide-on-small-only">
+                    <pre> </pre>
+                </div>
+                <input #fromDate type="date" class="datepicker col s10 m4 l2" placeholder="Hasta" [(ngModel)]="dateTo" (keyup)="keyUp($event)">
+                <div class="col m1 hide-on-med-and-down">
+                    <pre> </pre>
+                </div>
+                <a *ngIf="!loading" class="btn-floating" (click)="search()"><i class="material-icons">search</i></a>
+                <app-loader [size]="small" [center]="true" [show]="loading"></app-loader>
+            </div>
+            <p class="grey-text text-lighten-1">No especificar <strong>Hasta</strong> para realizar la busqueda en un solo dia</p>
+        </div>
+
+        <div class="section">
+            <ul class="collection" *ngIf="incidents.length >0">
+                <li class="collection-item" *ngFor="let inci of incidents; let i = index">
+                    <app-incident [incident]="inci" [index]="i" (attended)="removeIncident($event)"></app-incident>
+                </li>
+            </ul>
+            <p *ngIf="!loading && searched && incidents.length == 0" class="mt mb">
+                Inicidencias no notificadas.
+            </p>
+        </div>
+    </div>
+</div>

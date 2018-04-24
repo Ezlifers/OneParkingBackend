@@ -1,0 +1,18 @@
+<div class="section">
+    <h5 class="detail-title">Vehiculos
+      <div class="right" >
+          <i class="material-icons grey-text" (click)="refresh()">refresh</i>
+      </div>
+    </h5>
+    <div class="section">
+
+      <app-loader [size]="small" [center]="true" [show]="loading"></app-loader>
+
+      <ul class="collection" *ngIf="cars.length > 0 && !loading">
+          <li class="collection-item" *ngFor="let c of cars;index as i">
+            <app-zone-car [car]="c" [timeComplete]="times[i]" [index]="i" (finish)="remove($event)"></app-zone-car>
+          </li>
+      </ul>
+      <p *ngIf="cars.length == 0 && !loading">Vehiculos no registrados.</p>
+    </div>
+</div>

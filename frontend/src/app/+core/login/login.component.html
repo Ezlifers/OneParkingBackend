@@ -1,0 +1,51 @@
+<div class="row login-container center-crop valign-wrapper" style="background-image: url('assets/images/popayan.webp')">
+  <div class="col s12 m6 l4 offset-m3 offset-l4">
+    <div class="valign card login-pane">
+      <div class="card-content white-text">
+        <div class="row valign-wrapper">
+          <div class="col s3">
+            <img src="assets/images/logo.png" class="responsive-img" />
+          </div>
+          <div class="col s9">
+            <h3 class="flow-text">OneParking</h3>
+          </div>
+        </div>
+
+        <form #loginForm="ngForm">
+          <div class="row">
+            <div class="input-field col s12">
+              <i class="material-icons prefix">perm_identity</i>
+              <input type="text" name="usr" [(ngModel)]="usuario" [class.invalid]="!usr.valid && !usr.pristine" class="validate" #usr="ngModel" required>
+              <label for="usr">Usuario</label>
+            </div>
+
+            <div class="input-field col s12">
+              <i class="material-icons prefix">lock_outline</i>
+              <input type="password" name="pass" [(ngModel)]="password" [class.invalid]="!pass.valid && !pass.pristine" class="validate" #pass="ngModel"
+                required>
+              <label for="pass">Contraseña</label>
+            </div>
+          </div>
+
+          <div class="row" *ngIf="errorUnkown || errorInvalid">
+            <p *ngIf="errorUnkown" class="center-align red-text text-darken-1">
+              No se pudo realizar la operación, intenta de nuevo.
+            </p>
+            <p *ngIf="errorInvalid" class="center-align red-text text-darken-1">
+              Usuario o contraseña incorrectos.
+            </p>
+          </div>
+
+          <div class="row">
+            <button class="btn waves-effect waves-light btn blue col s12" (click)="login()" type="submit" [disabled]="!loginForm.form.valid || loginProcess">Entrar</button>
+          </div>
+
+          <div class="progress grey darken-2" *ngIf="loginProcess">
+            <div class="indeterminate grey lighten-2"></div>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

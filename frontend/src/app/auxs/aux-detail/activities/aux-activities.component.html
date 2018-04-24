@@ -1,0 +1,21 @@
+<div class="section">
+  <h5>Actividades</h5>
+  <div class="row">
+    <input #searchDate type="date" class="datepicker col s9 m6" placeholder="Día" (keyup)="keyUp($event, searchDate.value)" [(ngModel)]="dateIni">
+    <a *ngIf="!loading" class="btn-floating vc" (click)="search(searchDate.value)"><i class="material-icons">search</i></a>
+    <app-loader [size]="small" [show]="loading"></app-loader>
+    <!--<p *ngIf="!loading && searched && locReg.length == 0" class="col s12 mt">
+      No se encontraron resultados
+    </p>
+
+    <div *ngIf="locReg.length > 0" class="row">
+      <div class="col s12 m6 l8">
+
+      </div>
+      <div class="col s12 m6 l4">
+
+      </div>
+    </div>-->
+
+  </div>
+</div>

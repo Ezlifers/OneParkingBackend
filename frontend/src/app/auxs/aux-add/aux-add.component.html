@@ -1,0 +1,51 @@
+<nav class="transparent z-depth-0">
+    <div class="nav-wrapper">
+        <div>
+            <a routerLink="../" class="breadcrumb dark">Auxiliares</a>
+            <a class="breadcrumb dark">Agregar Auxiliar</a>
+        </div>
+    </div>
+</nav>
+
+<div class="card-panel">
+    <h4>Agregar Auxiliar</h4>
+    <form #form="ngForm">
+        <div class="row">
+            <div class="input-field col s12">
+                <input name="ced" #ced="ngModel" type="number" [(ngModel)]="aux.cedula" [class.invalid]="!ced.valid && !ced.pristine" class="validate" required>
+                <label for="ced">Cedula</label>
+            </div>
+            <div class="input-field col s12">
+                <input name="nom" #nom="ngModel" type="text" [(ngModel)]="aux.nombre" [class.invalid]="!nom.valid && !nom.pristine" class="validate" required>
+                <label for="nom">Nombre</label>
+            </div>
+
+            <div class="input-field col s12">
+                <input name="cel" #cel="ngModel" type="text" [(ngModel)]="aux.celular" [class.invalid]="!cel.valid && !cel.pristine" class="validate" required>
+                <label for="cel">Celular Asignado</label>
+            </div>
+
+            <div class="input-field col s12">
+                <input name="dis" #dis="ngModel" type="text" [(ngModel)]="aux.dispositivo" [class.invalid]="!dis.valid && !dis.pristine" class="validate">
+                <label for="dis">Dispositivo Asignado</label>
+            </div>
+
+            <div class="file-field input-field col s12">
+                <div class="btn">
+                    <span>Imagen</span>
+                    <input type="file" accept=".jpg" (change)="fileSelected($event)">
+                </div>
+                <div class="file-path-wrapper">
+                    <input class="file-path validate" type="text">
+                </div>
+            </div>
+
+
+        </div>
+        <div class="row" *ngIf="!loading">
+            <button (click)="add()" class="btn waves-effect waves-light btn blue col s12" type="submit" [disabled]="!form.valid">Agregar</button>
+        </div>
+        <app-loader [center]="true" [show]="loading" [size]="small"></app-loader>
+
+    </form>
+</div>

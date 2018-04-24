@@ -1,0 +1,63 @@
+<div class="section">
+    <h4 class="detail-title mb">Horarios por Defecto</h4>
+    <div class="section mt">
+        <div *ngFor="let tu of config.tiempos; index as i">
+            <b class="blue-text">{{tu.tipo}}</b>
+            <i class="tiny material-icons grey-text vc clickable" (click)="showDialog(tu.tipo,i)">add_circle</i>
+
+
+            <table *ngIf="tu.horarios.length > 0; else noShedule">
+                <thead>
+                    <tr>
+                        <th data-field="horario">Horario</th>
+                        <th data-field="tarifaDefecto">Disponibilidad</th>
+                        <th data-field="disSwitch"></th>
+                        <th data-field="eliminar"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let t of tu.horarios;index as j">
+                        <td>{{t.ti|timeMinute}} a {{t.tf|timeMinute}}</td>
+                        <td *ngIf="t.d">Disponible</td>
+                        <td *ngIf="!t.d">Prohibido</td>
+                        <td>
+                            <div class="switch">
+                                <label>
+                                    <input #d type="checkbox" [checked]="t.d" (change)="changeAvailability(i,j,d.checked)">
+                                    <span class="lever"></span>
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            <i class="tiny material-icons grey-text vc clickable" (click)="removeTime(i,j)">cancel</i>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <ng-template #noShedule>
+                <p>No especificado</p>
+            </ng-template>
+        </div>
+    </div>
+    <div id="addDialog" class="modal">
+        <div class="modal-content">
+            <h5>Agregar Horario</h5>
+            <h6>{{titleDialog}}</h6>
+            <div class="row mt">
+                <div class="input-field col s12 m6">
+                    <input type="time" class="validate" [(ngModel)]="addTi" #ti required>
+                    <label class="active" for="ti">Desde</label>
+                </div>
+                <div class="input-field col s12 m6">
+                    <input type="time" class="validate" [(ngModel)]="addTf" #tf required>
+                    <label class="active" for="tf">Hasta</label>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <a (click)="addTime()" class=" modal-action modal-close waves-effect waves-green btn-flat">Aceptar</a>
+            <a class=" modal-action modal-close waves-effect waves-green btn-flat">Cancelar</a>
+        </div>
+    </div>
+</div>

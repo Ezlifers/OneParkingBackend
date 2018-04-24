@@ -57,6 +57,11 @@ gulp.task('public', function () {
         .pipe(gulp.dest('./out/public'));
 });
 
+gulp.task('publicProd', function () {
+    return gulp.src('./src/public/**/*')
+        .pipe(gulp.dest('/home/public'));
+});
+
 // watch for any TypeScript 
 // if a file change is detected, run the TypeScript gulp tasks
 gulp.task('watch', function () {
@@ -64,4 +69,5 @@ gulp.task('watch', function () {
 });
 
 gulp.task('buildAll', ['build', 'public']);
+gulp.task('buildAllProd', ['build', 'publicProd']);
 gulp.task('default', ['browser-sync']);

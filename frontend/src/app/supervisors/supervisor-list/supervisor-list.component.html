@@ -1,0 +1,20 @@
+<div class="row">
+    <div class="col s12 m6 l4 p" *ngFor="let s of supervisors">
+        <div class="card hoverable clickable" (click)="goToSupervisor(s)">
+            <div class="card-horizontal">
+                <img class="m-small img-center-crop" src="{{service.urlBase+s.imagen}}" />
+                <div class="card-content nm p-small">
+                    <h6 class="mb-small"><b>{{s.nombre}}</b></h6>
+                    <p><i class="tiny material-icons grey-text mr-small">account_box</i><span>{{s.cedula}}</span></p>
+                    <p><i class="tiny material-icons grey-text mr-small">phone</i><span>{{s.celular}}</span></p>                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="fixed-action-btn" style="bottom: 20px; right: 20px;">
+    <a class="btn-floating btn-large light-green" (click)="goToAdd()">
+        <i class="large material-icons">add</i>
+    </a>
+</div>

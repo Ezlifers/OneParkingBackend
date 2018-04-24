@@ -1,0 +1,50 @@
+<nav class="transparent z-depth-0">
+  <div class="nav-wrapper">
+    <div>
+      <a routerLink="../" class="breadcrumb dark">Lista de Zonas</a>
+      <a class="breadcrumb dark">Agregar Zona</a>
+    </div>
+  </div>
+</nav>
+
+<div class="card-panel">
+  <h4>Agregar Zona</h4>
+  <form #form="ngForm" class="col s12">
+    <div class="row">
+      <div class="input-field col s12">
+        <input name="cod" type="number" [(ngModel)]="zone.codigo" [class.invalid]="!cod.valid && !cod.pristine" class="validate"
+          #cod="ngModel" required>
+        <label for="cod">Codigo</label>
+      </div>
+
+      <div class="input-field col s12">
+        <input name="nombre" type="text" [(ngModel)]="zone.nombre" [class.invalid]="!nom.valid && !nom.pristine" class="validate"
+          #nom="ngModel" required>
+        <label for="nom">Nombre</label>
+      </div>
+
+      <div class="input-field col s12">
+        <input name="dir" type="text" [(ngModel)]="zone.direccion" [class.invalid]="!dir.valid && !dir.pristine" class="validate"
+          #dir="ngModel" required>
+        <label for="dir">Direccion</label>
+      </div>
+
+      <div class="input-field col s12">
+        <input name="nba" type="number" [(ngModel)]="zone.nBahias" [class.invalid]="!nba.valid && !nba.pristine" class="validate"
+          #nba="ngModel" required min="1">
+        <label for="nba">Numero de Bahias</label>
+      </div>
+      <div class="col s12">
+        <sebm-google-map [latitude]="centerLat" [longitude]="centerLon" [zoom]="15" [disableDefaultUI]="true" [zoomControl]="false"
+          (mapClick)="mapClick($event)">
+          <sebm-google-map-marker [latitude]="zone.localizacion.coordinates[1]" [longitude]="zone.localizacion.coordinates[0]" [label]="'P'" [markerDraggable]="true" (dragEnd)="dragEnd($event)"></sebm-google-map-marker>
+        </sebm-google-map>
+      </div>
+    </div>
+
+    <div class="row" *ngIf="!loading">
+      <button (click)="add()" class="btn waves-effect waves-light btn blue col s12" type="submit" [disabled]="!form.valid || loading">Agregar</button>
+    </div>
+    <app-loader [center]="true" [show]="loading" [size]="small"></app-loader>    
+  </form>
+</div>

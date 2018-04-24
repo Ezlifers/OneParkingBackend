@@ -1,0 +1,45 @@
+.nav-avatar{
+  padding: 10px;
+}
+.nav-avatar span{
+  font-size: 10px;
+}
+.nav-avatar h6,span{
+  margin: 0px;
+  padding: 0px;
+}
+
+.collection.nm{
+  margin: 0px;
+}
+.collection.nav-less{
+  border:none;
+}
+
+.collection.nav-less a,.collection.nav-less li {
+  border-bottom: 1px solid #2b2b2b;
+  background: #212121;
+  color: #eeeeee;
+}
+
+.collection.nav-less a{
+  cursor: pointer;
+}
+.collection.nav-less li{
+  cursor: default;;
+}
+.collection.nav-less i,.collection.nav-less span{
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 10px;
+
+}
+
+.collection.nav-less li.collection-header{
+  border-bottom: 1px solid transparent;
+  color: #999;  
+}
+
+.collection.nav-less a.collection-item:not(.active):hover {
+  background-color: #444;
+}
