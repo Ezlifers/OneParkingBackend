@@ -12,11 +12,11 @@ prepare:
   stage: build
   script: 
     - npm install --unsafe-perm
-    - sudo mkdir -p /home/public/
-    - sudo mkdir -p /home/public/imgsrc/
-    - sudo mkdir -p /home/public/images/
-    - sudo sudo mkdir -p /home/public/images/usuarios/
-    - sudo mkdir -p /home/public/images/incidencias/
+    - mkdir -p /home/public/
+    - mkdir -p /home/public/imgsrc/
+    - mkdir -p /home/public/images/
+    - mkdir -p /home/public/images/usuarios/
+    - mkdir -p /home/public/images/incidencias/
     - npm run buildProduction
   tags:
     - main
